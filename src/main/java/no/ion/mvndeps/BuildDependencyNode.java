@@ -1,5 +1,7 @@
 package no.ion.mvndeps;
 
+import no.ion.mvndeps.maven.MavenModule;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashSet;

@@ -1,5 +1,10 @@
 package no.ion.mvndeps;
 
+import no.ion.mvndeps.maven.BadPomException;
+import no.ion.mvndeps.maven.MavenDependency;
+import no.ion.mvndeps.maven.MavenModule;
+import no.ion.mvndeps.maven.MavenProject;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;

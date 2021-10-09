@@ -1,4 +1,4 @@
-package no.ion.mvndeps;
+package no.ion.mvndeps.maven;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;

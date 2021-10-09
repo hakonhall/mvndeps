@@ -7,7 +7,7 @@ public class MavenCoordinate {
     private final String artifactId;
     private final String version;
 
-    MavenCoordinate(String groupId, String artifactId, String version) {
+    public MavenCoordinate(String groupId, String artifactId, String version) {
         this.groupId = requireNonEmpty(groupId, "groupId");
         this.artifactId = requireNonEmpty(artifactId, "groupId");
         this.version = requireNonEmpty(version, "version");

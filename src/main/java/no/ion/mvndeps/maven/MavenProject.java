@@ -1,4 +1,7 @@
-package no.ion.mvndeps;
+package no.ion.mvndeps.maven;
+
+import no.ion.mvndeps.ArtifactId;
+import no.ion.mvndeps.MavenCoordinate;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -23,8 +26,8 @@ public class MavenProject {
         return modules.values().stream().flatMap(m -> m.values().stream()).collect(Collectors.toList());
     }
 
-    boolean artifactIsInProject(ArtifactId artifactId) { return modules.containsKey(artifactId); }
-    boolean artifactIsInProject(String groupId, String artifactId) {
+    public boolean artifactIsInProject(ArtifactId artifactId) { return modules.containsKey(artifactId); }
+    public boolean artifactIsInProject(String groupId, String artifactId) {
         return modules.containsKey(new ArtifactId(groupId, artifactId));
     }
 

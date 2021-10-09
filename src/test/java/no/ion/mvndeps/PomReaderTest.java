@@ -1,10 +1,13 @@
 package no.ion.mvndeps;
 
+import no.ion.mvndeps.maven.MavenDependency;
+import no.ion.mvndeps.maven.MavenModule;
+import no.ion.mvndeps.maven.MavenProject;
+import no.ion.mvndeps.maven.MavenProjectReader;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 

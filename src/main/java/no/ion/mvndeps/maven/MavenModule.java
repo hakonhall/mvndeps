@@ -1,5 +1,7 @@
-package no.ion.mvndeps;
+package no.ion.mvndeps.maven;
 
+import no.ion.mvndeps.ArtifactId;
+import no.ion.mvndeps.MavenCoordinate;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 
@@ -92,7 +94,7 @@ public class MavenModule {
         } while (true);
     }
 
-    List<MavenDependency> getDependencies() {
+    public List<MavenDependency> getDependencies() {
         List<Dependency> dependencies = model.getDependencies();
         if (dependencies == null) {
             return List.of();
@@ -154,7 +156,7 @@ public class MavenModule {
         return dependencies;
     }
 
-    List<MavenDependency> getPreTestDependencies() {
+    public List<MavenDependency> getPreTestDependencies() {
         List<Dependency> dependencies = model.getDependencies();
         if (dependencies == null) {
             return List.of();
