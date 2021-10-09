@@ -1,8 +1,5 @@
 package no.ion.mvndeps.maven;
 
-import no.ion.mvndeps.ArtifactId;
-import no.ion.mvndeps.MavenCoordinate;
-
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;

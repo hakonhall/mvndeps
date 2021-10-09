@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import static no.ion.mvndeps.Exceptions.uncheckIO;
+import static no.ion.mvndeps.misc.Exceptions.uncheckIO;
 
 public class BuildResultsReader {
     public static BuildResults read(Path buildResultPath) {

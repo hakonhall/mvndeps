@@ -1,4 +1,4 @@
-package no.ion.mvndeps;
+package no.ion.mvndeps.misc;
 
 import no.ion.mvndeps.maven.MavenModule;
 
@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static no.ion.mvndeps.Exceptions.uncheck;
-import static no.ion.mvndeps.Exceptions.uncheckIO;
+import static no.ion.mvndeps.misc.Exceptions.uncheck;
+import static no.ion.mvndeps.misc.Exceptions.uncheckIO;
 
 public class Mvn {
     private final Path projectDirectory;

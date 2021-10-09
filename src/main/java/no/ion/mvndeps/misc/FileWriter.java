@@ -1,4 +1,4 @@
-package no.ion.mvndeps;
+package no.ion.mvndeps.misc;
 
 import java.io.BufferedWriter;
 import java.io.UncheckedIOException;
@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import static no.ion.mvndeps.Exceptions.uncheckIO;
+import static no.ion.mvndeps.misc.Exceptions.uncheckIO;
 
 public class FileWriter implements AutoCloseable {
     private final BufferedWriter writer;

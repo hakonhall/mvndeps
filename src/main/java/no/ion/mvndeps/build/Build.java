@@ -1,6 +1,6 @@
 package no.ion.mvndeps.build;
 
-import no.ion.mvndeps.MavenCoordinate;
+import no.ion.mvndeps.maven.MavenCoordinate;
 import no.ion.mvndeps.maven.MavenModule;
 import no.ion.mvndeps.maven.MavenProject;
 import no.ion.mvndeps.maven.MavenProjectReader;

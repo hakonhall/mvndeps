@@ -1,6 +1,6 @@
 package no.ion.mvndeps.build;
 
-import no.ion.mvndeps.MavenCoordinate;
+import no.ion.mvndeps.maven.MavenCoordinate;
 import no.ion.mvndeps.maven.MavenModule;
 import no.ion.mvndeps.graph.Edge;
 
@@ -14,7 +14,7 @@ public class ModuleBuild {
     private Duration totalElapsedTime = null;
     private Optional<Edge<MavenCoordinate, ModuleBuild, BuildEdge>> criticalEdge = Optional.empty();
 
-    public ModuleBuild(MavenModule module) {
+    ModuleBuild(MavenModule module) {
         this.module = module;
     }
 

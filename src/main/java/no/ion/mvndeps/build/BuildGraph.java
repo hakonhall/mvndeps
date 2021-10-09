@@ -1,7 +1,7 @@
 package no.ion.mvndeps.build;
 
-import no.ion.mvndeps.MavenCoordinate;
-import no.ion.mvndeps.Mutable;
+import no.ion.mvndeps.maven.MavenCoordinate;
+import no.ion.mvndeps.misc.Mutable;
 import no.ion.mvndeps.dot.DotAttribute;
 import no.ion.mvndeps.dot.DotId;
 import no.ion.mvndeps.dot.EdgeStatement;

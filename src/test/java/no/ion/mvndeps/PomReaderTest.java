@@ -1,5 +1,6 @@
 package no.ion.mvndeps;
 
+import no.ion.mvndeps.maven.MavenCoordinate;
 import no.ion.mvndeps.maven.MavenDependency;
 import no.ion.mvndeps.maven.MavenModule;
 import no.ion.mvndeps.maven.MavenProject;

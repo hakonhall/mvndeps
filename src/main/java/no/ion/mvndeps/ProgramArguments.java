@@ -1,4 +1,4 @@
-package no.ion.mvndeps.program;
+package no.ion.mvndeps;
 
 public class ProgramArguments {
     private final String[] args;
