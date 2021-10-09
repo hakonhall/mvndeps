@@ -17,10 +17,12 @@ import no.ion.mvndeps.graph.Vertex;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Build {
     private final Dag<MavenCoordinate, ModuleBuild, BuildEdge> dag;
@@ -48,7 +50,10 @@ public class Build {
         dag.visit(vertex -> {
             digraph.addNode(dotIdOf(vertex), List.of());
 
-            for (var outgoingEdge : vertex.outgoing()) {
+            for (var outgoingEdge : vertex.outgoing()
+                                          .stream().
+                                          sorted(Comparator.comparing(e -> e.toVertex().id().toString()))
+                                          .collect(Collectors.toList())) {
                 digraph.addEdge(dotIdOf(vertex), dotIdOf(outgoingEdge.toVertex()), List.of());
             }
         });
