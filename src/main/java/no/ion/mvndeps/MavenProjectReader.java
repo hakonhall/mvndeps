@@ -66,22 +66,15 @@ public class MavenProjectReader {
             return mavenModule;
         }
 
-        //System.out.println("Reading " + (modulePath.toString().equals(".") ? "" : modulePath + "/") + "pom.xml");
         if (verbose)
             System.out.println("Reading " + modulePath);
+
         Model model = reader.readModel(projectDirectory.resolve(modulePath));
 
         Optional<MavenModule> parentModule = ParentElement
                 .fromModel(model)
                 .map(parentElement -> {
-                    Path parentModulePath = modulePath.resolve(parentElement.relativePath()).normalize();
-                    if (parentModulePath.getName(parentModulePath.getNameCount() - 1).toString().equals("pom.xml")) {
-                        parentModulePath = parentModulePath.getParent();
-                    }
-                    if (parentModulePath.toString().equals("")) {
-                        parentModulePath = parentModulePath.getFileSystem().getPath(".");
-                    }
-
+                    Path parentModulePath = modulePath.resolve(parentElement.relativeDirectory()).normalize();
                     return resolvePom(parentModulePath);
                 });
 
