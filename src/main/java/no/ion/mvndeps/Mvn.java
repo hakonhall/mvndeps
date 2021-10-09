@@ -1,5 +1,7 @@
 package no.ion.mvndeps;
 
+import no.ion.mvndeps.maven.MavenModule;
+
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;

@@ -1,5 +1,7 @@
-package no.ion.mvndeps;
+package no.ion.mvndeps.maven;
 
+import no.ion.mvndeps.ArtifactId;
+import no.ion.mvndeps.MavenCoordinate;
 import org.apache.maven.model.Dependency;
 
 import java.util.Objects;
@@ -18,13 +20,13 @@ public class MavenDependency {
         this.dependency = dependency;
     }
 
-    ArtifactId getArtifact() { return new ArtifactId(groupId(), artifactId()); }
-    String groupId() { return Objects.requireNonNull(dependency.getGroupId()); }
-    String artifactId() { return Objects.requireNonNull(dependency.getArtifactId()); }
-    Optional<String> version() { return Optional.ofNullable(dependency.getVersion()); }
+    public ArtifactId getArtifact() { return new ArtifactId(groupId(), artifactId()); }
+    public String groupId() { return Objects.requireNonNull(dependency.getGroupId()); }
+    public String artifactId() { return Objects.requireNonNull(dependency.getArtifactId()); }
+    public Optional<String> version() { return Optional.ofNullable(dependency.getVersion()); }
 
     /** Version, with value resolved from properties and any parent. */
-    String resolvedVersion() {
+    public String resolvedVersion() {
         return Optional
                 .ofNullable(dependency.getVersion())
                 .map(version -> module.replaceProperties(version))
@@ -34,7 +36,7 @@ public class MavenDependency {
                                 toString())));
     }
 
-    MavenCoordinate resolvedCoordinate() {
+    public MavenCoordinate resolvedCoordinate() {
         String version = resolvedVersion();
         return new MavenCoordinate(groupId(), artifactId(), version);
     }

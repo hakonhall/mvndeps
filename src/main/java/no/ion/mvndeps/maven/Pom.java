@@ -1,5 +1,6 @@
-package no.ion.mvndeps;
+package no.ion.mvndeps.maven;
 
+import no.ion.mvndeps.PomParent;
 import org.apache.maven.model.Model;
 
 import java.nio.file.Path;
