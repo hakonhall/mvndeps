@@ -17,6 +17,8 @@ public class MavenProjectReader {
     private final FileSystem fileSystem;
     private final Path projectDirectory;
 
+    private boolean verbose = false;
+
     /**
      * Path to module directories, relative to the project directory ("." for the project directory itself)
      * whose poms have not yet been read.
@@ -32,6 +34,11 @@ public class MavenProjectReader {
         this.fileSystem = projectDirectory.getFileSystem();
         this.projectDirectory = projectDirectory;
         this.builder = new MavenProjectBuilder(projectDirectory);
+    }
+
+    public MavenProjectReader setVerbose(boolean verbose) {
+        this.verbose = verbose;
+        return this;
     }
 
     /** Read projectDirectory, and its parent, modules, and dependencies, recursively. */
@@ -60,7 +67,8 @@ public class MavenProjectReader {
         }
 
         //System.out.println("Reading " + (modulePath.toString().equals(".") ? "" : modulePath + "/") + "pom.xml");
-        System.out.println("Reading " + modulePath);
+        if (verbose)
+            System.out.println("Reading " + modulePath);
         Model model = reader.readModel(projectDirectory.resolve(modulePath));
 
         Optional<MavenModule> parentModule = ParentElement
