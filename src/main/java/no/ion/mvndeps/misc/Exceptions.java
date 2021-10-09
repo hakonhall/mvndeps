@@ -1,4 +1,4 @@
-package no.ion.mvndeps;
+package no.ion.mvndeps.misc;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;

@@ -1,4 +1,4 @@
-package no.ion.mvndeps;
+package no.ion.mvndeps.maven;
 
 import java.util.Objects;
 

@@ -1,6 +1,5 @@
 package no.ion.mvndeps.maven;
 
-import no.ion.mvndeps.MavenCoordinate;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 

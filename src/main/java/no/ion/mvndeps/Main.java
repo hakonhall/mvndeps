@@ -1,42 +1,31 @@
-package no.ion.mvndeps.build;
+package no.ion.mvndeps;
 
-import no.ion.mvndeps.FileWriter;
-import no.ion.mvndeps.Mvn;
-import no.ion.mvndeps.UserError;
-import no.ion.mvndeps.program.ProgramArguments;
-import no.ion.mvndeps.program.UsageError;
+import no.ion.mvndeps.build.Build;
+import no.ion.mvndeps.build.DotCommand;
+import no.ion.mvndeps.misc.FileWriter;
+import no.ion.mvndeps.misc.Mvn;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 
-import static no.ion.mvndeps.Exceptions.uncheckIO;
+import static no.ion.mvndeps.misc.Exceptions.uncheckIO;
 
-public class BuildMain {
+public class Main {
     private static final Path JAVA11_HOME = Path.of("/home/hakon/share/jdk-11.0.10+9");
 
     private final ProgramArguments args;
 
-    private static void failIf(boolean condition, String message) {
-        if (condition)
-            throw new UsageError(message);
-    }
-
-    private static void fail(String message) {
-        System.err.println(message);
-        System.exit(1);
-    }
-
     public static void main(String... args) {
         try {
-            new BuildMain(new ProgramArguments(args)).go();
-        } catch (UserError e) {
+            new Main(new ProgramArguments(args)).go();
+        } catch (UsageError e) {
             System.err.println(e.getMessage());
             System.exit(1);
         }
     }
 
-    private BuildMain(ProgramArguments args) {
+    private Main(ProgramArguments args) {
         this.args = args;
     }
 
@@ -51,6 +40,16 @@ public class BuildMain {
             default:
                 throw new UsageError("Unknown command: " + args.getString());
         }
+    }
+
+    private static void failIf(boolean condition, String message) {
+        if (condition)
+            throw new UsageError(message);
+    }
+
+    private static void fail(String message) {
+        System.err.println(message);
+        System.exit(1);
     }
 
     private void dotCommand() {

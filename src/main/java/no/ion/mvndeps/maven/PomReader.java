@@ -7,8 +7,8 @@ import org.codehaus.plexus.util.ReaderFactory;
 import java.io.Reader;
 import java.nio.file.Path;
 
-import static no.ion.mvndeps.Exceptions.uncheck;
-import static no.ion.mvndeps.Exceptions.uncheckIO;
+import static no.ion.mvndeps.misc.Exceptions.uncheck;
+import static no.ion.mvndeps.misc.Exceptions.uncheckIO;
 
 public class PomReader {
     Model readModel(Path directory) {

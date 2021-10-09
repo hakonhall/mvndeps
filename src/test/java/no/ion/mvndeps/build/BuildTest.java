@@ -13,7 +13,7 @@ class BuildTest {
     @Test
     void buildAll() {
         // Building this project would require running this test, which requires building the project, which...
-        //BuildMain.main("timings", "-p", projectDirectory.toString(), "-o", "target/build-timings.txt");
+        //Main.main("timings", "-p", projectDirectory.toString(), "-o", "target/build-timings.txt");
     }
 
     @Test

@@ -1,4 +1,4 @@
-package no.ion.mvndeps;
+package no.ion.mvndeps.misc;
 
 public class Mutable<T> {
     private T value;

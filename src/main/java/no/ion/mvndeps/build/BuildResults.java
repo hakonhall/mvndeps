@@ -1,6 +1,6 @@
 package no.ion.mvndeps.build;
 
-import no.ion.mvndeps.ArtifactId;
+import no.ion.mvndeps.maven.ArtifactId;
 
 import java.util.ArrayList;
 import java.util.HashMap;

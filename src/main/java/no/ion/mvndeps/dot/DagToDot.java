@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 
-import static no.ion.mvndeps.Exceptions.uncheckIO;
+import static no.ion.mvndeps.misc.Exceptions.uncheckIO;
 
 public class DagToDot {
     public static <ID, V, E> void toDotFile(String name,

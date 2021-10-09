@@ -1,7 +1,5 @@
 package no.ion.mvndeps.maven;
 
-import no.ion.mvndeps.ArtifactId;
-import no.ion.mvndeps.MavenCoordinate;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Model;
 
@@ -118,7 +116,6 @@ public class MavenModule {
             return true;
         }
 
-        // TODO: Parse plugins. See also in BuildQueue
         var documentgenTestCoordinate = new MavenCoordinate("com.yahoo.vespa", "documentgen-test", "7-SNAPSHOT");
         if (coordinate.equals(documentgenTestCoordinate)) {
             var vespaDocumentgenPluginCoordinate = new MavenCoordinate("com.yahoo.vespa", "vespa-documentgen-plugin", "7-SNAPSHOT");

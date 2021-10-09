@@ -1,7 +1,5 @@
 package no.ion.mvndeps.maven;
 
-import no.ion.mvndeps.ArtifactId;
-import no.ion.mvndeps.MavenCoordinate;
 import org.apache.maven.model.Dependency;
 
 import java.util.Objects;
