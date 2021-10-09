@@ -11,17 +11,19 @@ public class BuildResults {
     private final List<BuildResult> results = new ArrayList<>();
     private final Map<ArtifactId, BuildResult> byArtifactId = new HashMap<>();
 
-    BuildResults() {}
+    public BuildResults() {}
 
-    void add(BuildResult result) {
+    public void add(BuildResult result) {
         results.add(result);
         byArtifactId.put(result.artifactId(), result);
     }
 
-    BuildResult get(ArtifactId artifactId) {
+    public BuildResult get(ArtifactId artifactId) {
         BuildResult result = byArtifactId.get(artifactId);
         if (result == null)
             throw new IllegalArgumentException("There is no build result for " + artifactId);
         return result;
     }
+
+    public List<BuildResult> toList() { return List.copyOf(results); }
 }

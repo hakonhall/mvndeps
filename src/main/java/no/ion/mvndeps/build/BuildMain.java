@@ -13,7 +13,6 @@ import java.time.Duration;
 import static no.ion.mvndeps.Exceptions.uncheckIO;
 
 public class BuildMain {
-    private static final Path vespaPath = Path.of("/home/hakon/local/github/vespa-engine/vespa");
     private static final Path JAVA11_HOME = Path.of("/home/hakon/share/jdk-11.0.10+9");
 
     private final ProgramArguments args;
@@ -57,6 +56,7 @@ public class BuildMain {
     private void dotCommand() {
         Path inputPath = null;
         Path outputPath = null;
+        Path projectDirectory = null;
 
         while (args.hasMore()) {
             switch (args.nextAsString()) {
@@ -65,6 +65,9 @@ public class BuildMain {
                     continue;
                 case "-o":
                     outputPath = Path.of(args.nextAsStringOptionValue());
+                    continue;
+                case "-p":
+                    projectDirectory = Path.of(args.nextAsStringOptionValue());
                     continue;
                 default:
                     if (args.getString().startsWith("-"))
@@ -77,23 +80,32 @@ public class BuildMain {
         failIf(inputPath == null, "-i is required");
         Path finalInputPath = inputPath;
         failIf(uncheckIO(() -> !Files.isRegularFile(finalInputPath)), "Input file does not exist: " + inputPath);
+
         failIf(outputPath == null, "-o is required");
         Path finalOutputPath = outputPath;
         failIf(uncheckIO(() -> !Files.isDirectory(finalOutputPath.getParent())), "Directory of output path does not exist: " +
                 outputPath.getParent());
 
+        failIf(projectDirectory == null, "-p is required");
+        Path finalProjectDirectory = projectDirectory;
+        failIf(uncheckIO(() -> !Files.isDirectory(finalProjectDirectory)), "Project does not exist: " + projectDirectory);
+
         failIf(args.hasMore(), "Extraneous arguments");
 
-        new DotCommand(inputPath, outputPath, vespaPath).go();
+        new DotCommand(inputPath, outputPath, projectDirectory).go();
     }
 
     private void buildAll() {
+        Path projectDirectory = null;
         Path outputPath = null;
 
         while (args.hasMore()) {
             switch (args.nextAsString()) {
                 case "-o":
                     outputPath = Path.of(args.nextAsStringOptionValue());
+                    continue;
+                case "-p":
+                    projectDirectory = Path.of(args.nextAsStringOptionValue());
                     continue;
                 default:
                     if (args.getString().startsWith("-"))
@@ -103,6 +115,7 @@ public class BuildMain {
             break;
         }
 
+        failIf(projectDirectory == null, "-p is required");
         failIf(outputPath == null, "-o is required");
         Path finalOutputPath = outputPath;
         failIf(uncheckIO(() -> !Files.isDirectory(finalOutputPath.getParent())), "Directory of output path does not exist: " +
@@ -110,10 +123,10 @@ public class BuildMain {
 
         failIf(args.hasMore(), "Extraneous arguments");
 
-        var mvn = new Mvn(JAVA11_HOME, vespaPath);
+        var mvn = new Mvn(JAVA11_HOME, projectDirectory);
         mvn.clean();
 
-        Build build = Build.read(vespaPath);
+        Build build = Build.read(projectDirectory);
 
         try (var writer = FileWriter.truncateForWriting(outputPath)) {
             build.buildOrder().forEach(vertex -> {
