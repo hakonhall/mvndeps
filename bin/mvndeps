@@ -1,0 +1,71 @@
+#!/bin/bash
+
+function Die {
+    printf "%s" "$@"
+    echo
+    exit 1
+}
+
+declare MVNDEPS_ROOT
+function FindMvndepsRoot {
+    if ! type realpath &> /dev/null
+    then
+        Die "realpath not installed"
+    fi
+    # See https://hakonhallingstad.blogspot.com/2021/10/a-shell-script-locating-itself.html
+    MVNDEPS_ROOT=$(realpath -m "$0"/../..)
+
+    local mainfile="$MVNDEPS_ROOT"/src/main/java/no/ion/mvndeps/Main.java
+    if ! test -r "$mainfile"
+    then
+        Die "Does not look like a mvndeps root: No such file: $mainfile"
+    fi
+}
+
+function Main {
+    FindMvndepsRoot
+
+    local jarfile="$MVNDEPS_ROOT"/target/mvndeps-1.0-SNAPSHOT.jar
+    if ! test -r "$jarfile"
+    then
+        Die "mvndeps JAR file not found: run 'make'"
+    fi
+
+    # Jars from mvn dependency:tree.  Only a subset is required.
+    local jars=(
+        #.m2/repository/javax/inject/javax.inject/1/javax.inject-1.jar
+        #.m2/repository/org/apache/commons/commons-lang3/3.8.1/commons-lang3-3.8.1.jar
+        #.m2/repository/org/apache/maven/maven-artifact/3.8.1/maven-artifact-3.8.1.jar
+        #.m2/repository/org/apache/maven/maven-builder-support/3.8.1/maven-builder-support-3.8.1.jar
+        #.m2/repository/org/apache/maven/maven-model-builder/3.8.1/maven-model-builder-3.8.1.jar
+        .m2/repository/org/apache/maven/maven-model/3.8.1/maven-model-3.8.1.jar
+        #.m2/repository/org/apache/maven/maven-repository-metadata/3.8.1/maven-repository-metadata-3.8.1.jar
+        #.m2/repository/org/apache/maven/maven-resolver-provider/3.8.1/maven-resolver-provider-3.8.1.jar
+        #.m2/repository/org/apache/maven/resolver/maven-resolver-api/1.6.2/maven-resolver-api-1.6.2.jar
+        #.m2/repository/org/apache/maven/resolver/maven-resolver-impl/1.6.2/maven-resolver-impl-1.6.2.jar
+        #.m2/repository/org/apache/maven/resolver/maven-resolver-spi/1.6.2/maven-resolver-spi-1.6.2.jar
+        #.m2/repository/org/apache/maven/resolver/maven-resolver-util/1.6.2/maven-resolver-util-1.6.2.jar
+        #.m2/repository/org/codehaus/plexus/plexus-interpolation/1.25/plexus-interpolation-1.25.jar
+        .m2/repository/org/codehaus/plexus/plexus-utils/3.2.1/plexus-utils-3.2.1.jar
+        #.m2/repository/org/eclipse/sisu/org.eclipse.sisu.inject/0.3.4/org.eclipse.sisu.inject-0.3.4.jar
+        #.m2/repository/org/slf4j/slf4j-api/1.7.29/slf4j-api-1.7.29.jar
+    )
+
+    local cp="$MVNDEPS_ROOT"/target/mvndeps-1.0-SNAPSHOT.jar
+    local jar
+    for jar in "${jars[@]}"
+    do
+        local jarpath="$MVNDEPS_ROOT/$jar"
+        if ! test -r "$jarpath"
+        then
+            Die "Failed to find dependency: $jarpath"
+        fi
+
+        cp+=:"$jarpath"
+    done
+
+    #echo java -cp "$cp" no.ion.mvndeps.Main "$@"
+    java -cp "$cp" no.ion.mvndeps.Main "$@"
+}
+
+Main "$@"
