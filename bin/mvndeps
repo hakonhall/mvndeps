@@ -64,8 +64,19 @@ function Main {
         cp+=:"$jarpath"
     done
 
+    local java=java
+    if ! type java &> /dev/null
+    then
+        if test -v JAVA_HOME
+        then
+            java="$JAVA_HOME"/bin/java
+        else
+            Die "No java in PATH"
+        fi
+    fi
+
     #echo java -cp "$cp" no.ion.mvndeps.Main "$@"
-    java -cp "$cp" no.ion.mvndeps.Main "$@"
+    "$java" -cp "$cp" no.ion.mvndeps.Main "$@"
 }
 
 Main "$@"

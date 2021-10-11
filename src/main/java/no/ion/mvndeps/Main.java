@@ -109,7 +109,7 @@ public class Main {
         var usage = new Usage();
         Option<Path> projectDirectory = usage.addRequired("-p", Path::of);
         Option<String> format = usage.addOption("-f", "artifactId", spec -> switch (spec) {
-            case "artifactId", "groupId:artifactId", "path" -> spec;
+            case "artifactId", "full", "groupId:artifactId", "path" -> spec;
             default -> throw new UsageError("Invalid option value: '" + spec + "'");
         });
 
@@ -122,6 +122,7 @@ public class Main {
              .map(vertex ->
                           switch (format.get()) {
                               case "artifactId" -> vertex.id().artifactId();
+                              case "full" -> vertex.id().getGroupArtifact() + " " + vertex.get().module().modulePath();
                               case "groupId:artifactId" -> vertex.id().getGroupArtifact();
                               case "path" -> vertex.get().module().modulePath();
                               default -> throw new IllegalStateException("Unknown format: '" + format.get() + "'");
