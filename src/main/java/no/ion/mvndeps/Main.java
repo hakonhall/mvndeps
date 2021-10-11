@@ -4,10 +4,14 @@ import no.ion.mvndeps.build.Build;
 import no.ion.mvndeps.build.DotCommand;
 import no.ion.mvndeps.misc.FileWriter;
 import no.ion.mvndeps.misc.Mvn;
+import no.ion.mvndeps.misc.Option;
+import no.ion.mvndeps.misc.Usage;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Optional;
+import java.util.function.Function;
 
 import static no.ion.mvndeps.misc.Exceptions.uncheckIO;
 
@@ -18,24 +22,31 @@ public class Main {
 
     public static void main(String... args) {
         try {
-            new Main(new ProgramArguments(args)).go();
+            new Main(args).go();
         } catch (UsageError e) {
             System.err.println(e.getMessage());
             System.exit(1);
         }
     }
 
-    private Main(ProgramArguments args) {
-        this.args = args;
+    public Main(String... args) {
+        this.args = new ProgramArguments(args);
     }
 
-    private void go() {
-        switch (args.nextAsString("Missing command")) {
+    public void go() {
+        switch (args.getString()) {
             case "dot":
+                args.next();
                 dotCommand();
                 break;
             case "timings":
+            case "build":
+                args.next();
                 buildAll();
+                break;
+            case "build-order":
+                args.next();
+                buildOrder();
                 break;
             default:
                 throw new UsageError("Unknown command: " + args.getString());
@@ -57,8 +68,8 @@ public class Main {
         Path outputPath = null;
         Path projectDirectory = null;
 
-        while (args.hasMore()) {
-            switch (args.nextAsString()) {
+        for (; !args.atEnd(); args.next()) {
+            switch (args.getString()) {
                 case "-i":
                     inputPath = Path.of(args.nextAsStringOptionValue());
                     continue;
@@ -89,17 +100,45 @@ public class Main {
         Path finalProjectDirectory = projectDirectory;
         failIf(uncheckIO(() -> !Files.isDirectory(finalProjectDirectory)), "Project does not exist: " + projectDirectory);
 
-        failIf(args.hasMore(), "Extraneous arguments");
+        failIf(!args.atEnd(), "Extraneous arguments");
 
         new DotCommand(inputPath, outputPath, projectDirectory).go();
     }
 
-    private void buildAll() {
-        Path projectDirectory = null;
-        Path outputPath = null;
+    private void buildOrder() {
+        var usage = new Usage();
+        Option<Path> projectDirectory = usage.addRequired("-p", Path::of);
+        Option<String> format = usage.addOption("-f", "artifactId", spec -> switch (spec) {
+            case "artifactId", "groupId:artifactId", "path" -> spec;
+            default -> throw new UsageError("Invalid option value: '" + spec + "'");
+        });
 
-        while (args.hasMore()) {
-            switch (args.nextAsString()) {
+        usage.readOptions(args);
+
+        Build build = Build.read(projectDirectory.get());
+
+        build.buildOrder()
+             .stream()
+             .map(vertex ->
+                          switch (format.get()) {
+                              case "artifactId" -> vertex.id().artifactId();
+                              case "groupId:artifactId" -> vertex.id().getGroupArtifact();
+                              case "path" -> vertex.get().module().modulePath();
+                              default -> throw new IllegalStateException("Unknown format: '" + format.get() + "'");
+                          })
+             .forEach(System.out::println);
+    }
+
+    private void buildAll() {
+        Path javaHome = Optional.ofNullable(System.getProperty("JAVA_HOME")).map(Path::of).orElse(null);
+        Path outputPath = null;
+        Path projectDirectory = null;
+
+        for (; !args.atEnd(); args.next()) {
+            switch (args.getString()) {
+                case "-j":
+                    javaHome = Path.of(args.nextAsStringOptionValue());
+                    continue;
                 case "-o":
                     outputPath = Path.of(args.nextAsStringOptionValue());
                     continue;
@@ -114,13 +153,17 @@ public class Main {
             break;
         }
 
+        failIf(javaHome == null, "-j or JAVA_HOME must be set for mvn command");
+        Path finalJavaHome = javaHome;
+        failIf(uncheckIO(() -> !Files.isDirectory(finalJavaHome)), "Java home does not exist: " + javaHome);
+
         failIf(projectDirectory == null, "-p is required");
         failIf(outputPath == null, "-o is required");
         Path finalOutputPath = outputPath;
         failIf(uncheckIO(() -> !Files.isDirectory(finalOutputPath.getParent())), "Directory of output path does not exist: " +
                 outputPath.getParent());
 
-        failIf(args.hasMore(), "Extraneous arguments");
+        failIf(!args.atEnd(), "Extraneous arguments");
 
         var mvn = new Mvn(JAVA11_HOME, projectDirectory);
         mvn.clean();
