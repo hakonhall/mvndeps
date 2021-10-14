@@ -9,19 +9,20 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static no.ion.mvndeps.misc.Exceptions.uncheck;
 import static no.ion.mvndeps.misc.Exceptions.uncheckIO;
 
 public class Mvn {
     private final Path projectDirectory;
-    private final Path m2Repository;
-    private final Path java11Home;
+    private final Optional<Path> m2Repository;
+    private final Optional<Path> javaHome;
 
-    public Mvn(Path java11Home, Path projectDirectory) {
-        this.java11Home = uncheck(java11Home::toAbsolutePath);
+    public Mvn(Path java11HomeOrNull, Path projectDirectory, Path mavenRepoLocal) {
+        this.javaHome = Optional.ofNullable(java11HomeOrNull).map(j -> uncheck(j::toAbsolutePath));
         this.projectDirectory = uncheck(projectDirectory::toAbsolutePath);
-        this.m2Repository = projectDirectory.resolve(".m2/repository");
+        this.m2Repository = Optional.ofNullable(mavenRepoLocal);
     }
 
     public void clean() {
@@ -29,14 +30,14 @@ public class Mvn {
     }
 
     /** Maven install the module, and return the elapsed time. */
-    public Duration install(MavenModule module) {
-        return mvn("install", "-pl", ":" + module.coordinate().artifactId());
+    public Duration install(Path relativeModulePath) {
+        return mvn("install", "-pl", relativeModulePath.toString());
     }
 
     private Duration mvn(String... additionalArguments) {
         List<String> command = new ArrayList<>();
         command.add("mvn");
-        command.add("-Dmaven.repo.local=" + m2Repository);
+        m2Repository.ifPresent(r -> command.add("-Dmaven.repo.local=" + r));
         command.add("-B");
         command.add("-T1");
         command.addAll(List.of(additionalArguments));
@@ -52,7 +53,7 @@ public class Mvn {
                 .directory(projectDirectory.toFile());
 
         Map<String, String> environment = processBuilder.environment();
-        environment.put("JAVA_HOME", java11Home.toString());
+        javaHome.ifPresent(j -> environment.put("JAVA_HOME", j.toString()));
 
         long startNanos = System.nanoTime();
         Process process = uncheckIO(processBuilder::start);

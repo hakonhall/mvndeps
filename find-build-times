@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+
+root=$(realpath -m "$0"/..)
+cd "$root"
+
+make
+
+bin/mvndeps \
+    build \
+    -p ~/local/github/vespa-engine/vespa \
+    -o ~/tmp/mvndeps.out/minimal-build-order.dat \
+    -j ~/share/jdk-11.0.10+9 \
+    -r ~/local/github/vespa-engine/vespa/.m2/repository

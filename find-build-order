@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -e
+
+root=$(realpath -m "$0"/..)
+cd "$root"
+
+make
+
+bin/mvndeps \
+    build-order \
+    -p ~/local/github/vespa-engine/vespa \
+    -o ~/tmp/mvndeps.out

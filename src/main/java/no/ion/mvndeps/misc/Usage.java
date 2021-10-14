@@ -12,6 +12,10 @@ public class Usage {
 
     public Usage() {}
 
+    public Option<String> addOption(String name, String defaultValueOrNull) {
+        return addOption(name, defaultValueOrNull, Function.identity());
+    }
+
     public <T> Option<T> addOption(String name, T defaultValueOrNull, Function<String, T> mapper) {
         return defineOption(name, false, true, defaultValueOrNull, mapper);
     }
