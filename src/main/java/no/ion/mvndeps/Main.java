@@ -1,17 +1,31 @@
 package no.ion.mvndeps;
 
 import no.ion.mvndeps.build.Build;
+import no.ion.mvndeps.build.BuildEdge;
 import no.ion.mvndeps.build.DotCommand;
+import no.ion.mvndeps.build.ModuleBuild;
+import no.ion.mvndeps.graph.Vertex;
+import no.ion.mvndeps.maven.ArtifactId;
+import no.ion.mvndeps.maven.ModuleInfo;
+import no.ion.mvndeps.maven.MavenCoordinate;
 import no.ion.mvndeps.misc.FileWriter;
 import no.ion.mvndeps.misc.Mvn;
 import no.ion.mvndeps.misc.Option;
 import no.ion.mvndeps.misc.Usage;
 
+import javax.lang.model.SourceVersion;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static no.ion.mvndeps.misc.Exceptions.uncheckIO;
 
@@ -35,12 +49,15 @@ public class Main {
 
     public void go() {
         switch (args.getString()) {
+            case "build":
+                args.next();
+                buildBasedOnBuildOrderFile();
+                break;
             case "dot":
                 args.next();
                 dotCommand();
                 break;
             case "timings":
-            case "build":
                 args.next();
                 buildAll();
                 break;
@@ -107,27 +124,128 @@ public class Main {
 
     private void buildOrder() {
         var usage = new Usage();
-        Option<Path> projectDirectory = usage.addRequired("-p", Path::of);
         Option<String> format = usage.addOption("-f", "artifactId", spec -> switch (spec) {
             case "artifactId", "full", "groupId:artifactId", "path" -> spec;
             default -> throw new UsageError("Invalid option value: '" + spec + "'");
         });
+        Option<Optional<Path>> outputDirectory = usage.addOption("-o", Optional.empty(), s -> Optional.of(Path.of(s)));
+        Option<Path> projectDirectory = usage.addRequired("-p", Path::of);
 
         usage.readOptions(args);
 
         Build build = Build.read(projectDirectory.get());
 
-        build.buildOrder()
-             .stream()
-             .map(vertex ->
-                          switch (format.get()) {
-                              case "artifactId" -> vertex.id().artifactId();
-                              case "full" -> vertex.id().getGroupArtifact() + " " + vertex.get().module().modulePath();
-                              case "groupId:artifactId" -> vertex.id().getGroupArtifact();
-                              case "path" -> vertex.get().module().modulePath();
-                              default -> throw new IllegalStateException("Unknown format: '" + format.get() + "'");
-                          })
-             .forEach(System.out::println);
+        List<Vertex<MavenCoordinate, ModuleBuild, BuildEdge>> verticesInBuildOrder = build.buildOrder();
+
+        var serialized = new StringBuilder();
+
+        if (!format.isPresent() && outputDirectory.isPresent()) {
+            format.setValue("full");
+        }
+
+        verticesInBuildOrder.stream()
+                            .map(vertex -> switch (format.get()) {
+                                case "artifactId" -> vertex.id().artifactId();
+                                case "full" -> vertex.id().getGroupArtifact() + " " + vertex.get().module().modulePath();
+                                case "groupId:artifactId" -> vertex.id().getGroupArtifact();
+                                case "path" -> vertex.get().module().modulePath();
+                                default -> throw new IllegalStateException("Unknown format: '" + format.get() + "'");
+                            })
+                            .forEach(line -> serialized.append(line).append('\n'));
+
+        outputDirectory.get().ifPresentOrElse(outDir -> {
+            createDirectoryUnlessItExists(outDir);
+            Path buildOrderFilePath = buildOrderFilePath(outDir);
+            uncheckIO(() -> Files.writeString(buildOrderFilePath,
+                                              serialized,
+                                              StandardOpenOption.TRUNCATE_EXISTING,
+                                              StandardOpenOption.CREATE));
+            System.out.println("Wrote build order to " + buildOrderFilePath);
+        }, () -> {
+            System.out.print(serialized);
+        });
+    }
+
+    private void buildBasedOnBuildOrderFile() {
+        var usage = new Usage();
+        Option<Path> javaHome = usage.addOption("-j", null, Path::of);
+        Option<Path> buildOrderPath = usage.addRequired("-o", Path::of);
+        Option<Path> projectDirectory = usage.addRequired("-p", Path::of);
+        Option<Path> mavenRepoLocal = usage.addOption("-r", defaultMavenRepoLocal(), Path::of);
+
+        usage.readOptions(args);
+
+        if (!args.atEnd())
+            throw new UsageError("Extraneous arguments");
+
+        Path resolvedBuildOrderPath = Files.isDirectory(buildOrderPath.get()) ?
+                buildOrderFilePath(buildOrderPath.get()) :
+                buildOrderPath.get();
+
+        List<String> lines = uncheckIO(() -> Files.readAllLines(resolvedBuildOrderPath));
+        Pattern linePattern = Pattern.compile("^(.*):(.*) (.*)$");
+        List<ModuleInfo> moduleInfos = lines
+                .stream()
+                .filter(line -> !line.startsWith("#"))
+                .map(line -> {
+                    Matcher matcher = linePattern.matcher(line);
+                    if (!matcher.find()) {
+                        throw new UsageError("Bad line in build order file " + resolvedBuildOrderPath + ": " + line);
+                    }
+
+
+                    String groupId = matcher.group(1);
+                    if (!SourceVersion.isName(groupId))
+                        throw new UsageError("Not a valid groupId in build order file: " + line);
+
+                    String artifactId = matcher.group(2);
+                    if (artifactId.indexOf(' ') != -1)
+                        throw new UsageError("Not a valid artifactId in build order file: " + line);
+
+                    String path = matcher.group(3);
+                    String normalized = Path.of(path).normalize().toString();
+                    if (normalized.startsWith("/") || normalized.equals("..") || normalized.startsWith("../"))
+                        throw new UsageError("Not a valid path in build order file: " + line);
+
+                    return new ModuleInfo(new ArtifactId(groupId, artifactId), Path.of(path));
+                })
+                .collect(Collectors.toList());
+
+        build(projectDirectory.get(), moduleInfos, javaHome.get(), mavenRepoLocal.get());
+    }
+
+    private static Path defaultMavenRepoLocal() {
+        String home = System.getProperty("user.home");
+        if (home == null)
+            throw new UsageError("user.home system property (home directory) is not set");
+
+        return Path.of(home);
+    }
+
+    private void build(Path projectDirectory, List<ModuleInfo> moduleInfos, Path javaHomeOrNull,
+                       Path mavenRepoLocalOrNull) {
+        Mvn mvn = new Mvn(javaHomeOrNull, projectDirectory, mavenRepoLocalOrNull);
+        mvn.clean();
+
+        for (var moduleInfo : moduleInfos) {
+            long startNanos = System.nanoTime();
+            mvn.install(moduleInfo.path());
+            var elapsedTime = Duration.ofNanos(System.nanoTime() - startNanos);
+        }
+    }
+
+    private static void createDirectoryUnlessItExists(Path dir) {
+        try {
+            Files.createDirectory(dir);
+        } catch (FileAlreadyExistsException e) {
+            // ok
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private static Path buildOrderFilePath(Path outputDirectory) {
+        return outputDirectory.resolve("build-order.dat");
     }
 
     private void buildAll() {
@@ -166,14 +284,14 @@ public class Main {
 
         failIf(!args.atEnd(), "Extraneous arguments");
 
-        var mvn = new Mvn(JAVA11_HOME, projectDirectory);
+        var mvn = new Mvn(JAVA11_HOME, projectDirectory, projectDirectory.resolve(".m2/repository"));
         mvn.clean();
 
         Build build = Build.read(projectDirectory);
 
         try (var writer = FileWriter.truncateForWriting(outputPath)) {
             build.buildOrder().forEach(vertex -> {
-                Duration elapsedTime = mvn.install(vertex.get().module());
+                Duration elapsedTime = mvn.install(vertex.get().module().modulePath());
                 String serialized = String.format("%s %s %.3f\n",
                                                   vertex.get().module().modulePath(),
                                                   vertex.get().module().coordinate().getGroupArtifact(),

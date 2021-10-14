@@ -77,7 +77,7 @@ public class Build {
         return order;
     }
 
-    public void inBuildOrder(Consumer<Vertex<MavenCoordinate, ModuleBuild, BuildEdge>> callback) {
+    private void inBuildOrder(Consumer<Vertex<MavenCoordinate, ModuleBuild, BuildEdge>> callback) {
         var dagBuilder = dag.toBuilder();
         while (true) {
             Optional<ModuleBuild> moduleBuild = dagBuilder.popRoot();

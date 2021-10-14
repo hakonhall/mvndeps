@@ -35,8 +35,9 @@ class PomReaderTest {
                                      .map(MavenDependency::toString)
                                      .collect(Collectors.toSet());
         assertEquals(Set.of("org.apache.maven:maven-model-builder:3.8.1",
-                                    "org.apache.maven:maven-resolver-provider:3.8.1",
-                                    "org.junit.jupiter:junit-jupiter:5.8.1"),
+                            "org.apache.maven:maven-resolver-provider:3.8.1",
+                            "org.junit.jupiter:junit-jupiter:5.8.1",
+                            "com.google.protobuf:protobuf-java:3.18.1"),
                      dependencies);
     }
 

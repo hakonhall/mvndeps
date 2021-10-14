@@ -29,7 +29,7 @@ public class BuildGraph {
     void go() {
         final Mutable<Vertex<MavenCoordinate, ModuleBuild, BuildEdge>> last = new Mutable<>(null);
 
-        build.inBuildOrder(vertex -> {
+        build.buildOrder().forEach(vertex -> {
             Edge<MavenCoordinate, ModuleBuild, BuildEdge> criticalEdge = null;
             Duration totalElapsedTimeBase = null;
 
@@ -66,7 +66,7 @@ public class BuildGraph {
         final Mutable<Duration> maxElapsedTime = new Mutable<>(null);
         final Mutable<Double> minMeasure = new Mutable<>(null);
         final Mutable<Double> maxMeasure = new Mutable<>(null);
-        build.inBuildOrder(vertex -> {
+        build.buildOrder().forEach(vertex -> {
             Duration elapsed = vertex.get().elapsedTime();
             if (minElapsedTime.get() == null) {
                 minElapsedTime.set(elapsed);

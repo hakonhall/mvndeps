@@ -26,10 +26,10 @@ public class Option<T> {
     public boolean isPresent() { return present; }
     public T get() { return value.orElseThrow(); }
 
+    /** May be useful to override the default based on environment or options. */
+    public void setValue(String value) { this.value = Optional.of(value).map(mapper); }
+
     void setPresent() { this.present = true; }
-    void setValue(String value) {
-        this.value = Optional.of(value).map(mapper);
-    }
 
     void validate() {
         if (required) {
