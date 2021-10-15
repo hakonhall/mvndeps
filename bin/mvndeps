@@ -49,6 +49,7 @@ function Main {
         .m2/repository/org/codehaus/plexus/plexus-utils/3.2.1/plexus-utils-3.2.1.jar
         #.m2/repository/org/eclipse/sisu/org.eclipse.sisu.inject/0.3.4/org.eclipse.sisu.inject-0.3.4.jar
         #.m2/repository/org/slf4j/slf4j-api/1.7.29/slf4j-api-1.7.29.jar
+        .m2/repository/com/google/protobuf/protobuf-java/3.18.1/protobuf-java-3.18.1.jar
     )
 
     local cp="$MVNDEPS_ROOT"/target/mvndeps-1.0-SNAPSHOT.jar

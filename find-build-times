@@ -10,6 +10,6 @@ make
 bin/mvndeps \
     build \
     -p ~/local/github/vespa-engine/vespa \
-    -o ~/tmp/mvndeps.out/minimal-build-order.dat \
+    -i ~/tmp/mvndeps.out/builds.txt \
     -j ~/share/jdk-11.0.10+9 \
     -r ~/local/github/vespa-engine/vespa/.m2/repository

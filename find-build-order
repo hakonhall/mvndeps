@@ -10,4 +10,4 @@ make
 bin/mvndeps \
     build-order \
     -p ~/local/github/vespa-engine/vespa \
-    -o ~/tmp/mvndeps.out
+    -o ~/tmp/mvndeps.out/builds.txt
