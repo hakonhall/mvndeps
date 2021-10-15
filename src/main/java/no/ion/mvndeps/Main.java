@@ -5,26 +5,24 @@ import no.ion.mvndeps.build.BuildEdge;
 import no.ion.mvndeps.build.DotCommand;
 import no.ion.mvndeps.build.ModuleBuild;
 import no.ion.mvndeps.graph.Vertex;
-import no.ion.mvndeps.maven.ArtifactId;
-import no.ion.mvndeps.maven.ModuleInfo;
+import no.ion.mvndeps.io.BuildInfo;
+import no.ion.mvndeps.io.BuildInfos;
 import no.ion.mvndeps.maven.MavenCoordinate;
 import no.ion.mvndeps.misc.FileWriter;
 import no.ion.mvndeps.misc.Mvn;
 import no.ion.mvndeps.misc.Option;
 import no.ion.mvndeps.misc.Usage;
+import no.ion.mvndeps.proto.Builds;
 
-import javax.lang.model.SourceVersion;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static no.ion.mvndeps.misc.Exceptions.uncheckIO;
@@ -124,8 +122,8 @@ public class Main {
 
     private void buildOrder() {
         var usage = new Usage();
-        Option<String> format = usage.addOption("-f", "artifactId", spec -> switch (spec) {
-            case "artifactId", "full", "groupId:artifactId", "path" -> spec;
+        Option<String> format = usage.addOption("-f", "textual", spec -> switch (spec) {
+            case "proto" -> spec;
             default -> throw new UsageError("Invalid option value: '" + spec + "'");
         });
         Option<Optional<Path>> outputDirectory = usage.addOption("-o", Optional.empty(), s -> Optional.of(Path.of(s)));
@@ -137,81 +135,106 @@ public class Main {
 
         List<Vertex<MavenCoordinate, ModuleBuild, BuildEdge>> verticesInBuildOrder = build.buildOrder();
 
-        var serialized = new StringBuilder();
+        if (format.get().equals("proto")) {
+            if (outputDirectory.get().isEmpty())
+                throw new UsageError(outputDirectory.name() + " is required with " + format.get() + " format");
 
-        if (!format.isPresent() && outputDirectory.isPresent()) {
-            format.setValue("full");
+            var buildsBuilder = Builds.newBuilder();
+            verticesInBuildOrder.forEach(vertex -> buildsBuilder.addBuilds(
+                    no.ion.mvndeps.proto.Build.newBuilder()
+                                              .setGroupId(vertex.id().groupId())
+                                              .setArtifactId(vertex.id().artifactId())
+                                              .setPath(vertex.get().module().modulePath().toString())
+                                              .build()));
+
+            Builds builds = buildsBuilder.build();
+
+            createDirectoryUnlessItExists(outputDirectory.get().get());
+            Path buildOrderFilePath = buildOrderFilePath(outputDirectory.get().get());
+            try (var outputStream = Files.newOutputStream(buildOrderFilePath)) {
+                builds.writeTo(outputStream);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+
+        } else {
+            var buildInfos = new BuildInfos(new ArrayList<>());
+            verticesInBuildOrder.forEach(vertex -> {
+                var buildInfo = new BuildInfo(vertex.id().getGroupArtifact(), vertex.get().module().modulePath(), null);
+                buildInfos.buildInfos().add(buildInfo);
+            });
+
+            if (outputDirectory.get().isPresent()) {
+                createDirectoryUnlessItExists(outputDirectory.get().get());
+                Path buildOrderFilePath = buildOrderFilePath(outputDirectory.get().get());
+                buildInfos.writeToPath(buildOrderFilePath);
+            } else {
+                buildInfos.buildInfos().forEach(buildInfo -> System.out.println(buildInfo.serialize()));
+            }
         }
-
-        verticesInBuildOrder.stream()
-                            .map(vertex -> switch (format.get()) {
-                                case "artifactId" -> vertex.id().artifactId();
-                                case "full" -> vertex.id().getGroupArtifact() + " " + vertex.get().module().modulePath();
-                                case "groupId:artifactId" -> vertex.id().getGroupArtifact();
-                                case "path" -> vertex.get().module().modulePath();
-                                default -> throw new IllegalStateException("Unknown format: '" + format.get() + "'");
-                            })
-                            .forEach(line -> serialized.append(line).append('\n'));
-
-        outputDirectory.get().ifPresentOrElse(outDir -> {
-            createDirectoryUnlessItExists(outDir);
-            Path buildOrderFilePath = buildOrderFilePath(outDir);
-            uncheckIO(() -> Files.writeString(buildOrderFilePath,
-                                              serialized,
-                                              StandardOpenOption.TRUNCATE_EXISTING,
-                                              StandardOpenOption.CREATE));
-            System.out.println("Wrote build order to " + buildOrderFilePath);
-        }, () -> {
-            System.out.print(serialized);
-        });
     }
 
     private void buildBasedOnBuildOrderFile() {
         var usage = new Usage();
+        Option<String> format = usage.addOption("-f", "textual", spec -> switch (spec) {
+            case "proto", "textual" -> spec;
+            default -> throw new UsageError("Invalid option value: '" + spec + "'");
+        });
+        Option<Path> buildOrderPath = usage.addRequired("-i", Path::of);
         Option<Path> javaHome = usage.addOption("-j", null, Path::of);
-        Option<Path> buildOrderPath = usage.addRequired("-o", Path::of);
+        Option<Path> outPathOption = usage.addOption("-o", null, pathString -> {
+            Path path = Path.of(pathString);
+            if (!Files.isDirectory(path.getParent()))
+                throw new UsageError("Parent directory of output file does not wxist: " + path);
+            return path;
+        });
         Option<Path> projectDirectory = usage.addRequired("-p", Path::of);
         Option<Path> mavenRepoLocal = usage.addOption("-r", defaultMavenRepoLocal(), Path::of);
 
         usage.readOptions(args);
 
-        if (!args.atEnd())
-            throw new UsageError("Extraneous arguments");
-
         Path resolvedBuildOrderPath = Files.isDirectory(buildOrderPath.get()) ?
                 buildOrderFilePath(buildOrderPath.get()) :
                 buildOrderPath.get();
 
-        List<String> lines = uncheckIO(() -> Files.readAllLines(resolvedBuildOrderPath));
-        Pattern linePattern = Pattern.compile("^(.*):(.*) (.*)$");
-        List<ModuleInfo> moduleInfos = lines
-                .stream()
-                .filter(line -> !line.startsWith("#"))
-                .map(line -> {
-                    Matcher matcher = linePattern.matcher(line);
-                    if (!matcher.find()) {
-                        throw new UsageError("Bad line in build order file " + resolvedBuildOrderPath + ": " + line);
-                    }
+        Path outputPath = outPathOption.isPresent() ?
+                outPathOption.get() :
+                resolvedBuildOrderPath;
 
+        if (!args.atEnd())
+            throw new UsageError("Extraneous arguments");
 
-                    String groupId = matcher.group(1);
-                    if (!SourceVersion.isName(groupId))
-                        throw new UsageError("Not a valid groupId in build order file: " + line);
+        final BuildInfos buildInfos;
 
-                    String artifactId = matcher.group(2);
-                    if (artifactId.indexOf(' ') != -1)
-                        throw new UsageError("Not a valid artifactId in build order file: " + line);
+        switch (format.get()) {
+            case "proto": {
+                Builds builds;
+                try (var inputStream = Files.newInputStream(resolvedBuildOrderPath)) {
+                    builds = Builds.parseFrom(inputStream);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
 
-                    String path = matcher.group(3);
-                    String normalized = Path.of(path).normalize().toString();
-                    if (normalized.startsWith("/") || normalized.equals("..") || normalized.startsWith("../"))
-                        throw new UsageError("Not a valid path in build order file: " + line);
+                var buildInfoList = new ArrayList<BuildInfo>();
+                for (var b : builds.getBuildsList()) {
+                    long buildTimeNanos = b.getBuildTimeNanos();
+                    Double buildTimeSeconds = buildTimeNanos == 0L ? null : buildTimeNanos / 1e9;
+                    var buildInfo = BuildInfo.fromRaw(b.getGroupId(), b.getArtifactId(), b.getPath(), buildTimeSeconds);
+                    buildInfoList.add(buildInfo);
+                }
 
-                    return new ModuleInfo(new ArtifactId(groupId, artifactId), Path.of(path));
-                })
-                .collect(Collectors.toList());
+                buildInfos = new BuildInfos(List.copyOf(buildInfoList));
+                break;
+            }
+            case "textual": {
+                buildInfos = BuildInfos.readFromPath(resolvedBuildOrderPath);
+                break;
+            }
+            default:
+                throw new IllegalStateException("Unknown format: " + format.get());
+        }
 
-        build(projectDirectory.get(), moduleInfos, javaHome.get(), mavenRepoLocal.get());
+        build(projectDirectory.get(), buildInfos, javaHome.get(), mavenRepoLocal.get(), outputPath);
     }
 
     private static Path defaultMavenRepoLocal() {
@@ -222,16 +245,23 @@ public class Main {
         return Path.of(home);
     }
 
-    private void build(Path projectDirectory, List<ModuleInfo> moduleInfos, Path javaHomeOrNull,
-                       Path mavenRepoLocalOrNull) {
+    private void build(Path projectDirectory, BuildInfos buildInfos, Path javaHomeOrNull,
+                       Path mavenRepoLocalOrNull, Path outPath) {
         Mvn mvn = new Mvn(javaHomeOrNull, projectDirectory, mavenRepoLocalOrNull);
         mvn.clean();
 
-        for (var moduleInfo : moduleInfos) {
-            long startNanos = System.nanoTime();
-            mvn.install(moduleInfo.path());
-            var elapsedTime = Duration.ofNanos(System.nanoTime() - startNanos);
-        }
+        var updatedBuildInfos = new BuildInfos(
+                buildInfos.buildInfos()
+                          .stream()
+                          .map(buildInfo -> {
+                              long startNanos = System.nanoTime();
+                              mvn.install(buildInfo.modulePath());
+                              var elapsedTime = Duration.ofNanos(System.nanoTime() - startNanos);
+                              return new BuildInfo(buildInfo.artifactId(), buildInfo.modulePath(), elapsedTime);
+                          })
+                          .collect(Collectors.toList()));
+
+        updatedBuildInfos.writeToPath(outPath);
     }
 
     private static void createDirectoryUnlessItExists(Path dir) {

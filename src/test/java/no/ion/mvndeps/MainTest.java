@@ -7,6 +7,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class MainTest {
     @Test
     void buildOrder() {
-        new Main("build-order", "-p", ".", "-f", "full").go();
+        new Main("build-order", "-p", ".").go();
     }
 }
