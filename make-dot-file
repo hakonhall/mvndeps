@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+root=$(realpath -m "$0"/..)
+cd "$root"
+
+make
+
+bin/mvndeps \
+    dot \
+    -i ~/tmp/mvndeps.out/builds.txt \
+    -p ~/local/github/vespa-engine/vespa
+    -o ~/tmp/mvndeps.out/builds.dot \
+
+dot -Tsvg -o  ~/tmp/mvndeps.out/builds.svg ~/tmp/mvndeps.out/builds.dot

@@ -1,5 +1,7 @@
 package no.ion.mvndeps.build;
 
+import no.ion.mvndeps.io.BuildInfos;
+
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 
@@ -20,7 +22,7 @@ public class DotCommand {
 
     public void go() {
         Build build = Build.read(projectRoot);
-        var buildResults = BuildResultsReader.read(inputPath);
-        new BuildGraph(outputPath, buildResults, build).go();
+        var buildInfos = BuildInfos.readFromPath(inputPath);
+        new BuildGraph(outputPath, buildInfos, build).go();
     }
 }
