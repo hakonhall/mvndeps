@@ -1,0 +1,1189 @@
+digraph build {
+  ratio=2
+  nodesep=0.05
+  vespa [fontsize=10,label="vespa
+1s (1s)"]
+  "container-dependency-versions" [fontsize=10,label="container-dependency-versions
+1s (1s)"]
+  parent [fontsize=11,label="parent
+1s (3s)"]
+  "container-dependency-versions" -> parent [color=red,weight=2,penwidth=1]
+  configserver [fontsize=58,label="configserver
+29s (324s)"]
+  parent -> configserver
+  testutil -> configserver
+  defaults -> configserver
+  vespajlib -> configserver
+  orchestrator -> configserver [color=blue,weight=12,penwidth=4]
+  "application-model" -> configserver
+  "config-lib" -> configserver
+  "config-bundle" -> configserver
+  "config-provisioning" -> configserver
+  "config-model-api" -> configserver
+  "config-model-api" -> configserver
+  "config-model" -> configserver
+  "configserver-flags" -> configserver
+  "config-application-package" -> configserver
+  zkfacade -> configserver
+  "container-dev" -> configserver
+  "container-apache-http-client-bundle" -> configserver
+  "container-test" -> configserver
+  vespa_jersey2 -> configserver
+  jrt -> configserver
+  filedistribution -> configserver
+  statistics -> configserver
+  configdefinitions -> configserver
+  flags -> configserver
+  serviceview -> configserver
+  jaxrs_client_utils -> configserver
+  "zookeeper-server-common" -> configserver
+  "cloud-tenant-cd" [fontsize=16,label="cloud-tenant-cd
+4s (208s)"]
+  parent -> "cloud-tenant-cd"
+  "tenant-cd-api" -> "cloud-tenant-cd"
+  "security-utils" -> "cloud-tenant-cd"
+  vespajlib -> "cloud-tenant-cd"
+  "hosted-zone-api" -> "cloud-tenant-cd"
+  "container-dev" -> "cloud-tenant-cd" [color=blue,weight=3,penwidth=1]
+  "hosted-api" -> "cloud-tenant-cd"
+  "config-provisioning" -> "cloud-tenant-cd"
+  "tenant-cd-commons" -> "cloud-tenant-cd"
+  "tenant-base" [fontsize=11,label="tenant-base
+1s (296s)"]
+  container -> "tenant-base" [color=blue,weight=2,penwidth=1]
+  "container-test" -> "tenant-base"
+  "tenant-cd-api" -> "tenant-base"
+  "cloud-tenant-cd" -> "tenant-base"
+  "cloud-tenant-base" [fontsize=10,label="cloud-tenant-base
+1s (297s)"]
+  "hosted-tenant-base" -> "cloud-tenant-base" [color=blue,weight=2,penwidth=1]
+  "cloud-tenant-cd" -> "cloud-tenant-base"
+  "cloud-tenant-base-dependencies-enforcer" [fontsize=11,label="cloud-tenant-base-dependencies-enforcer
+1s (299s)"]
+  "cloud-tenant-base" -> "cloud-tenant-base-dependencies-enforcer" [color=blue,weight=2,penwidth=1]
+  "clustercontroller-apps" [fontsize=18,label="clustercontroller-apps
+6s (265s)"]
+  parent -> "clustercontroller-apps"
+  "container-dev" -> "clustercontroller-apps"
+  "clustercontroller-core" -> "clustercontroller-apps" [color=blue,weight=14,penwidth=5]
+  "clustercontroller-utils" -> "clustercontroller-apps"
+  zkfacade -> "clustercontroller-apps"
+  "zookeeper-server-common" -> "clustercontroller-apps"
+  "clustercontroller-core" [fontsize=72,label="clustercontroller-core
+37s (259s)"]
+  parent -> "clustercontroller-core"
+  jdisc_core -> "clustercontroller-core"
+  vespalog -> "clustercontroller-core"
+  "clustercontroller-utils" -> "clustercontroller-core"
+  defaults -> "clustercontroller-core"
+  vdslib -> "clustercontroller-core"
+  zkfacade -> "clustercontroller-core" [color=blue,weight=14,penwidth=5]
+  "zookeeper-server-common" -> "clustercontroller-core"
+  "zookeeper-client-common" -> "clustercontroller-core"
+  "vespa-testrunner-components" [fontsize=18,label="vespa-testrunner-components
+6s (300s)"]
+  parent -> "vespa-testrunner-components"
+  container -> "vespa-testrunner-components" [color=blue,weight=3,penwidth=1]
+  "vespa-osgi-testrunner" -> "vespa-testrunner-components"
+  "container-dependencies-enforcer" [fontsize=11,label="container-dependencies-enforcer
+2s (296s)"]
+  parent -> "container-dependencies-enforcer"
+  container -> "container-dependencies-enforcer" [color=blue,weight=2,penwidth=1]
+  "container-test" -> "container-dependencies-enforcer"
+  container [fontsize=11,label="container
+2s (294s)"]
+  parent -> container
+  "container-dev" -> container
+  "vespaclient-container-plugin" -> container [color=blue,weight=4,penwidth=2]
+  "hosted-tenant-base" [fontsize=10,label="hosted-tenant-base
+1s (295s)"]
+  container -> "hosted-tenant-base" [color=blue,weight=2,penwidth=1]
+  "container-test" -> "hosted-tenant-base"
+  "tenant-cd-api" -> "hosted-tenant-base"
+  "clustercontroller-reindexer" [fontsize=20,label="clustercontroller-reindexer
+7s (289s)"]
+  parent -> "clustercontroller-reindexer"
+  "container-dev" -> "clustercontroller-reindexer"
+  zkfacade -> "clustercontroller-reindexer"
+  "zookeeper-server-common" -> "clustercontroller-reindexer"
+  "config-provisioning" -> "clustercontroller-reindexer"
+  "config-model-api" -> "clustercontroller-reindexer"
+  testutil -> "clustercontroller-reindexer"
+  "config-model" -> "clustercontroller-reindexer"
+  "container-test" -> "clustercontroller-reindexer" [color=blue,weight=4,penwidth=2]
+  "athenz-identity-provider-service" [fontsize=24,label="athenz-identity-provider-service
+9s (332s)"]
+  parent -> "athenz-identity-provider-service"
+  component -> "athenz-identity-provider-service"
+  "container-apache-http-client-bundle" -> "athenz-identity-provider-service"
+  "container-dev" -> "athenz-identity-provider-service"
+  jdisc_core -> "athenz-identity-provider-service"
+  "node-repository" -> "athenz-identity-provider-service" [color=blue,weight=10,penwidth=4]
+  "config-provisioning" -> "athenz-identity-provider-service"
+  "config-model-api" -> "athenz-identity-provider-service"
+  "vespa-athenz" -> "athenz-identity-provider-service"
+  "security-utils" -> "athenz-identity-provider-service"
+  zkfacade -> "athenz-identity-provider-service"
+  application -> "athenz-identity-provider-service"
+  testutil -> "athenz-identity-provider-service"
+  flags -> "athenz-identity-provider-service"
+  "container-test" -> "athenz-identity-provider-service"
+  "node-admin" [fontsize=37,label="node-admin
+17s (339s)"]
+  parent -> "node-admin"
+  "config-provisioning" -> "node-admin"
+  "container-dev" -> "node-admin"
+  "vespa-athenz" -> "node-admin"
+  flags -> "node-admin"
+  "orchestrator-restapi" -> "node-admin"
+  application -> "node-admin"
+  "application-model" -> "node-admin"
+  orchestrator -> "node-admin"
+  "node-repository" -> "node-admin" [color=red,weight=12,penwidth=4]
+  "service-monitor" -> "node-admin"
+  testutil -> "node-admin"
+  zkfacade -> "node-admin"
+  "container-test" -> "node-admin"
+  "node-repository" [fontsize=54,label="node-repository
+26s (322s)"]
+  parent -> "node-repository"
+  "container-dev" -> "node-repository"
+  "container-apache-http-client-bundle" -> "node-repository"
+  "config-provisioning" -> "node-repository"
+  "service-monitor" -> "node-repository"
+  "application-model" -> "node-repository"
+  zkfacade -> "node-repository"
+  orchestrator -> "node-repository" [color=red,weight=11,penwidth=4]
+  flags -> "node-repository"
+  application -> "node-repository"
+  testutil -> "node-repository"
+  "container-test" -> "node-repository"
+  orchestrator [fontsize=34,label="orchestrator
+15s (295s)"]
+  parent -> orchestrator
+  "container-dev" -> orchestrator
+  "service-monitor" -> orchestrator
+  "orchestrator-restapi" -> orchestrator
+  "application-model" -> orchestrator
+  flags -> orchestrator
+  vespajlib -> orchestrator
+  jaxrs_client_utils -> orchestrator
+  application -> orchestrator [color=red,weight=10,penwidth=4]
+  "zookeeper-server-common" -> orchestrator
+  "config-provisioning" -> orchestrator
+  configdefinitions -> orchestrator
+  zkfacade -> orchestrator
+  testutil -> orchestrator
+  "controller-server" [fontsize=100,label="controller-server
+53s (336s)"]
+  parent -> "controller-server"
+  "container-apache-http-client-bundle" -> "controller-server"
+  "controller-api" -> "controller-server"
+  "config-application-package" -> "controller-server"
+  "container-dev" -> "controller-server"
+  zkfacade -> "controller-server"
+  serviceview -> "controller-server"
+  "config-provisioning" -> "controller-server"
+  "vespa-athenz" -> "controller-server"
+  "jdisc-security-filters" -> "controller-server"
+  flags -> "controller-server"
+  "configserver-flags" -> "controller-server"
+  "config-model-api" -> "controller-server"
+  "hosted-api" -> "controller-server"
+  application -> "controller-server"
+  testutil -> "controller-server"
+  "container-test" -> "controller-server" [color=blue,weight=19,penwidth=7]
+  "vespaclient-container-plugin" [fontsize=24,label="vespaclient-container-plugin
+9s (292s)"]
+  parent -> "vespaclient-container-plugin"
+  "vespaclient-core" -> "vespaclient-container-plugin"
+  "container-dev" -> "vespaclient-container-plugin"
+  "config-provisioning" -> "vespaclient-container-plugin"
+  "vespa-http-client" -> "vespaclient-container-plugin"
+  application -> "vespaclient-container-plugin"
+  testutil -> "vespaclient-container-plugin"
+  "container-test" -> "vespaclient-container-plugin" [color=blue,weight=4,penwidth=2]
+  "container-test" [fontsize=11,label="container-test
+2s (282s)"]
+  parent -> "container-test"
+  application -> "container-test" [color=blue,weight=8,penwidth=3]
+  "container-integration-test" [fontsize=16,label="container-integration-test
+4s (285s)"]
+  parent -> "container-integration-test"
+  "container-search-gui" -> "container-integration-test"
+  application -> "container-integration-test" [color=blue,weight=8,penwidth=3]
+  application [fontsize=45,label="application
+21s (280s)"]
+  parent -> application
+  "standalone-container" -> application [color=red,weight=9,penwidth=3]
+  "config-provisioning" -> application
+  "config-model" -> application
+  "config-model-api" -> application
+  "model-integration" -> application
+  jrt -> application
+  "container-dev" -> application
+  "container-search-gui" -> application
+  vespajlib -> application
+  jdisc_jetty -> application
+  testutil -> application
+  "standalone-container" [fontsize=20,label="standalone-container
+7s (258s)"]
+  parent -> "standalone-container"
+  "config-provisioning" -> "standalone-container"
+  "config-model" -> "standalone-container" [color=red,weight=11,penwidth=4]
+  "config-model-api" -> "standalone-container"
+  "config-application-package" -> "standalone-container"
+  "container-dev" -> "standalone-container"
+  "model-integration" -> "standalone-container"
+  defaults -> "standalone-container"
+  zkfacade -> "standalone-container"
+  vespajlib -> "standalone-container"
+  "configserver-flags" [fontsize=19,label="configserver-flags
+6s (228s)"]
+  parent -> "configserver-flags"
+  "container-dev" -> "configserver-flags"
+  zkfacade -> "configserver-flags" [color=blue,weight=5,penwidth=2]
+  flags -> "configserver-flags"
+  vespajlib -> "configserver-flags"
+  yolean -> "configserver-flags"
+  defaults -> "configserver-flags"
+  testutil -> "configserver-flags"
+  zkfacade [fontsize=24,label="zkfacade
+9s (222s)"]
+  parent -> zkfacade
+  defaults -> zkfacade
+  "container-dev" -> zkfacade
+  vespajlib -> zkfacade
+  "zookeeper-server-common" -> zkfacade [color=blue,weight=5,penwidth=2]
+  "zookeeper-client-common" -> zkfacade
+  "zookeeper-server" [fontsize=11,label="zookeeper-server
+1s (205s)"]
+  parent -> "zookeeper-server"
+  "container-dev" -> "zookeeper-server" [color=blue,weight=2,penwidth=1]
+  "zookeeper-server-3.6.2" [fontsize=17,label="zookeeper-server-3.6.2
+5s (217s)"]
+  "zookeeper-server" -> "zookeeper-server-3.6.2"
+  "zookeeper-server-common" -> "zookeeper-server-3.6.2" [color=blue,weight=4,penwidth=2]
+  "zookeeper-client-common" -> "zookeeper-server-3.6.2"
+  "zookeeper-server-3.6.3" [fontsize=17,label="zookeeper-server-3.6.3
+5s (217s)"]
+  "zookeeper-server" -> "zookeeper-server-3.6.3"
+  "zookeeper-server-common" -> "zookeeper-server-3.6.3" [color=blue,weight=4,penwidth=2]
+  "zookeeper-client-common" -> "zookeeper-server-3.6.3"
+  "zookeeper-server-common" [fontsize=19,label="zookeeper-server-common
+6s (212s)"]
+  "zookeeper-server" -> "zookeeper-server-common" [color=blue,weight=3,penwidth=1]
+  "jdisc-cloud-aws" [fontsize=17,label="jdisc-cloud-aws
+5s (183s)"]
+  parent -> "jdisc-cloud-aws"
+  "container-disc" -> "jdisc-cloud-aws" [color=blue,weight=5,penwidth=2]
+  "container-apache-http-client-bundle" -> "jdisc-cloud-aws"
+  jdisc_core -> "jdisc-cloud-aws"
+  component -> "jdisc-cloud-aws"
+  "config-model-fat" [fontsize=21,label="config-model-fat
+7s (261s)"]
+  parent -> "config-model-fat"
+  "fat-model-dependencies" -> "config-model-fat" [color=blue,weight=4,penwidth=2]
+  "config-model-api" -> "config-model-fat"
+  "config-provisioning" -> "config-model-fat"
+  "model-integration" -> "config-model-fat"
+  "documentgen-test" [fontsize=17,label="documentgen-test
+5s (265s)"]
+  parent -> "documentgen-test"
+  "container-dev" -> "documentgen-test"
+  vespajlib -> "documentgen-test"
+  linguistics -> "documentgen-test"
+  "config-model" -> "documentgen-test"
+  "config-model-api" -> "documentgen-test"
+  "config-provisioning" -> "documentgen-test"
+  "vespa-documentgen-plugin" -> "documentgen-test" [color=blue,weight=4,penwidth=2]
+  "vespa-documentgen-plugin" [fontsize=21,label="vespa-documentgen-plugin
+7s (259s)"]
+  parent -> "vespa-documentgen-plugin"
+  "container-dev" -> "vespa-documentgen-plugin"
+  linguistics -> "vespa-documentgen-plugin"
+  "config-model-api" -> "vespa-documentgen-plugin"
+  "config-provisioning" -> "vespa-documentgen-plugin"
+  "config-model" -> "vespa-documentgen-plugin" [color=blue,weight=11,penwidth=4]
+  searchlib -> "vespa-documentgen-plugin"
+  vespajlib -> "vespa-documentgen-plugin"
+  "vespaclient-java" [fontsize=24,label="vespaclient-java
+9s (219s)"]
+  parent -> "vespaclient-java"
+  "vespaclient-core" -> "vespaclient-java" [color=blue,weight=5,penwidth=2]
+  defaults -> "vespaclient-java"
+  "container-dev" -> "vespaclient-java"
+  document -> "vespaclient-java"
+  documentapi -> "vespaclient-java"
+  "predicate-search-core" -> "vespaclient-java"
+  vespajlib -> "vespaclient-java"
+  "application-preprocessor" [fontsize=20,label="application-preprocessor
+7s (259s)"]
+  parent -> "application-preprocessor"
+  component -> "application-preprocessor"
+  "config-model-api" -> "application-preprocessor"
+  "config-application-package" -> "application-preprocessor"
+  "config-model" -> "application-preprocessor" [color=blue,weight=11,penwidth=4]
+  "config-provisioning" -> "application-preprocessor"
+  vespajlib -> "application-preprocessor"
+  yolean -> "application-preprocessor"
+  "fat-model-dependencies" [fontsize=11,label="fat-model-dependencies
+1s (253s)"]
+  parent -> "fat-model-dependencies"
+  "config-model" -> "fat-model-dependencies" [color=blue,weight=11,penwidth=4]
+  "config-lib" -> "fat-model-dependencies"
+  "provided-dependencies" -> "fat-model-dependencies"
+  configdefinitions -> "fat-model-dependencies"
+  "config-application-package" -> "fat-model-dependencies"
+  "config-bundle" -> "fat-model-dependencies"
+  "model-evaluation" -> "fat-model-dependencies"
+  metrics -> "fat-model-dependencies"
+  component -> "fat-model-dependencies"
+  "container-disc" -> "fat-model-dependencies"
+  vespajlib -> "fat-model-dependencies"
+  yolean -> "fat-model-dependencies"
+  "container-documentapi" -> "fat-model-dependencies"
+  vdslib -> "fat-model-dependencies"
+  messagebus -> "fat-model-dependencies"
+  document -> "fat-model-dependencies"
+  "container-core" -> "fat-model-dependencies"
+  linguistics -> "fat-model-dependencies"
+  vespalog -> "fat-model-dependencies"
+  statistics -> "fat-model-dependencies"
+  "container-messagebus" -> "fat-model-dependencies"
+  searchlib -> "fat-model-dependencies"
+  docproc -> "fat-model-dependencies"
+  "container-search" -> "fat-model-dependencies"
+  "container-search-and-docproc" -> "fat-model-dependencies"
+  logd -> "fat-model-dependencies"
+  searchcore -> "fat-model-dependencies"
+  storage -> "fat-model-dependencies"
+  vsm -> "fat-model-dependencies"
+  indexinglanguage -> "fat-model-dependencies"
+  searchsummary -> "fat-model-dependencies"
+  "config-model" [fontsize=59,label="config-model
+30s (251s)"]
+  parent -> "config-model"
+  "config-lib" -> "config-model"
+  "config-provisioning" -> "config-model"
+  "provided-dependencies" -> "config-model"
+  configdefinitions -> "config-model"
+  "config-application-package" -> "config-model"
+  "config-bundle" -> "config-model"
+  metrics -> "config-model"
+  "metrics-proxy" -> "config-model"
+  "container-disc" -> "config-model"
+  vespajlib -> "config-model"
+  yolean -> "config-model"
+  testutil -> "config-model"
+  "container-documentapi" -> "config-model"
+  "config-model-api" -> "config-model"
+  "model-integration" -> "config-model"
+  vdslib -> "config-model"
+  messagebus -> "config-model"
+  document -> "config-model"
+  "container-core" -> "config-model"
+  jrt -> "config-model"
+  linguistics -> "config-model"
+  statistics -> "config-model"
+  "container-messagebus" -> "config-model"
+  searchlib -> "config-model"
+  docproc -> "config-model"
+  defaults -> "config-model"
+  "container-search" -> "config-model"
+  "container-search-and-docproc" -> "config-model"
+  "container-dev" -> "config-model"
+  logd -> "config-model"
+  searchcore -> "config-model"
+  storage -> "config-model"
+  vsm -> "config-model"
+  "vespaclient-core" -> "config-model"
+  indexinglanguage -> "config-model"
+  searchsummary -> "config-model"
+  "jdisc-security-filters" -> "config-model" [color=red,weight=11,penwidth=4]
+  "vespaclient-core" [fontsize=18,label="vespaclient-core
+6s (210s)"]
+  parent -> "vespaclient-core"
+  "container-dev" -> "vespaclient-core" [color=blue,weight=3,penwidth=1]
+  "controller-api" [fontsize=26,label="controller-api
+10s (224s)"]
+  parent -> "controller-api"
+  "container-dev" -> "controller-api"
+  "container-apache-http-client-bundle" -> "controller-api"
+  serviceview -> "controller-api"
+  "config-provisioning" -> "controller-api"
+  "vespa-athenz" -> "controller-api" [color=blue,weight=6,penwidth=2]
+  flags -> "controller-api"
+  vespajlib -> "controller-api"
+  configdefinitions -> "controller-api"
+  serviceview [fontsize=17,label="serviceview
+5s (209s)"]
+  parent -> serviceview
+  "container-dev" -> serviceview [color=blue,weight=3,penwidth=1]
+  docprocs [fontsize=20,label="docprocs
+7s (211s)"]
+  parent -> docprocs
+  document -> docprocs
+  "predicate-search-core" -> docprocs
+  docproc -> docprocs
+  "container-dev" -> docprocs [color=blue,weight=4,penwidth=2]
+  vespajlib -> docprocs
+  "config-bundle" -> docprocs
+  configdefinitions -> docprocs
+  linguistics -> docprocs
+  indexinglanguage -> docprocs
+  "configserver-client" [fontsize=19,label="configserver-client
+6s (219s)"]
+  parent -> "configserver-client"
+  "vespa-athenz" -> "configserver-client" [color=blue,weight=5,penwidth=2]
+  "container-apache-http-client-bundle" -> "configserver-client"
+  "security-utils" -> "configserver-client"
+  "config-provisioning" -> "configserver-client"
+  vespajlib -> "configserver-client"
+  yolean -> "configserver-client"
+  "vespa-osgi-testrunner" [fontsize=19,label="vespa-osgi-testrunner
+6s (210s)"]
+  parent -> "vespa-osgi-testrunner"
+  "container-dev" -> "vespa-osgi-testrunner" [color=blue,weight=4,penwidth=2]
+  "tenant-cd-api" -> "vespa-osgi-testrunner"
+  "hosted-api" -> "vespa-osgi-testrunner"
+  testutil -> "vespa-osgi-testrunner"
+  "service-monitor" [fontsize=23,label="service-monitor
+9s (222s)"]
+  parent -> "service-monitor"
+  "container-apache-http-client-bundle" -> "service-monitor"
+  config -> "service-monitor"
+  jdisc_core -> "service-monitor"
+  configdefinitions -> "service-monitor"
+  flags -> "service-monitor"
+  component -> "service-monitor"
+  "application-model" -> "service-monitor"
+  "config-model-api" -> "service-monitor"
+  "config-provisioning" -> "service-monitor"
+  "vespa-athenz" -> "service-monitor" [color=blue,weight=6,penwidth=2]
+  vespajlib -> "service-monitor"
+  "jdisc-security-filters" [fontsize=22,label="jdisc-security-filters
+8s (221s)"]
+  parent -> "jdisc-security-filters"
+  "container-dev" -> "jdisc-security-filters"
+  "vespa-athenz" -> "jdisc-security-filters" [color=red,weight=5,penwidth=2]
+  testutil -> "jdisc-security-filters"
+  "vespa-athenz" [fontsize=24,label="vespa-athenz
+9s (213s)"]
+  parent -> "vespa-athenz"
+  "container-dev" -> "vespa-athenz" [color=red,weight=4,penwidth=2]
+  "container-apache-http-client-bundle" -> "vespa-athenz"
+  "security-utils" -> "vespa-athenz"
+  testutil -> "vespa-athenz"
+  "container-dev" [fontsize=11,label="container-dev
+1s (203s)"]
+  parent -> "container-dev"
+  jdisc_core -> "container-dev"
+  "config-lib" -> "container-dev"
+  "provided-dependencies" -> "container-dev"
+  component -> "container-dev"
+  "model-evaluation" -> "container-dev"
+  "container-disc" -> "container-dev"
+  vespa_jersey2 -> "container-dev"
+  vespajlib -> "container-dev"
+  defaults -> "container-dev"
+  "container-search-and-docproc" -> "container-dev" [color=red,weight=4,penwidth=2]
+  "config-bundle" -> "container-dev"
+  "hosted-zone-api" -> "container-dev"
+  document -> "container-dev"
+  linguistics -> "container-dev"
+  "predicate-search-core" -> "container-dev"
+  "test-bundles" [fontsize=11,label="test-bundles
+1s (205s)"]
+  "bundle-plugin-test" -> "test-bundles"
+  "container-dev" -> "test-bundles" [color=blue,weight=2,penwidth=1]
+  "artifact-version-for-exports" [fontsize=12,label="artifact-version-for-exports
+2s (211s)"]
+  "test-bundles" -> "artifact-version-for-exports"
+  "artifact-version-for-exports-dep" -> "artifact-version-for-exports" [color=blue,weight=3,penwidth=1]
+  "integration-test" [fontsize=13,label="integration-test
+3s (214s)"]
+  "bundle-plugin-test" -> "integration-test"
+  config -> "integration-test"
+  vespajlib -> "integration-test"
+  main -> "integration-test"
+  "artifact-version-for-exports" -> "integration-test" [color=blue,weight=3,penwidth=1]
+  "artifact-version-for-exports-dep" [fontsize=12,label="artifact-version-for-exports-dep
+2s (208s)"]
+  "test-bundles" -> "artifact-version-for-exports-dep" [color=blue,weight=2,penwidth=1]
+  main [fontsize=15,label="main
+4s (209s)"]
+  "test-bundles" -> main [color=blue,weight=3,penwidth=1]
+  jrt -> main
+  "model-evaluation" [fontsize=21,label="model-evaluation
+7s (176s)"]
+  parent -> "model-evaluation"
+  component -> "model-evaluation"
+  jdisc_core -> "model-evaluation"
+  "container-core" -> "model-evaluation" [color=blue,weight=12,penwidth=4]
+  searchcore -> "model-evaluation"
+  config -> "model-evaluation"
+  configdefinitions -> "model-evaluation"
+  vespajlib -> "model-evaluation"
+  searchlib -> "model-evaluation"
+  "model-integration" -> "model-evaluation"
+  jdisc_jetty -> "model-evaluation"
+  "container-search-gui" [fontsize=16,label="container-search-gui
+5s (206s)"]
+  parent -> "container-search-gui"
+  yolean -> "container-search-gui"
+  jdisc_core -> "container-search-gui"
+  "container-core" -> "container-search-gui"
+  "container-search-and-docproc" -> "container-search-gui" [color=blue,weight=4,penwidth=2]
+  configdefinitions -> "container-search-gui"
+  "container-search-and-docproc" [fontsize=20,label="container-search-and-docproc
+7s (201s)"]
+  parent -> "container-search-and-docproc"
+  searchlib -> "container-search-and-docproc"
+  "container-search" -> "container-search-and-docproc" [color=red,weight=10,penwidth=4]
+  docproc -> "container-search-and-docproc"
+  jdisc_core -> "container-search-and-docproc"
+  "provided-dependencies" -> "container-search-and-docproc"
+  component -> "container-search-and-docproc"
+  configdefinitions -> "container-search-and-docproc"
+  "config-bundle" -> "container-search-and-docproc"
+  vespajlib -> "container-search-and-docproc"
+  "container-documentapi" -> "container-search-and-docproc"
+  messagebus -> "container-search-and-docproc"
+  document -> "container-search-and-docproc"
+  "container-core" -> "container-search-and-docproc"
+  jrt -> "container-search-and-docproc"
+  "container-messagebus" -> "container-search-and-docproc"
+  "container-disc" -> "container-search-and-docproc"
+  "container-search" [fontsize=52,label="container-search
+25s (194s)"]
+  parent -> "container-search"
+  "provided-dependencies" -> "container-search"
+  component -> "container-search"
+  config -> "container-search"
+  "config-lib" -> "container-search"
+  defaults -> "container-search"
+  "container-core" -> "container-search" [color=red,weight=15,penwidth=5]
+  searchlib -> "container-search"
+  fsa -> "container-search"
+  testutil -> "container-search"
+  "container-disc" [fontsize=24,label="container-disc
+9s (178s)"]
+  parent -> "container-disc"
+  testutil -> "container-disc"
+  "config-lib" -> "container-disc"
+  "provided-dependencies" -> "container-disc"
+  component -> "container-disc"
+  "container-apache-http-client-bundle" -> "container-disc"
+  "container-core" -> "container-disc" [color=blue,weight=12,penwidth=4]
+  "container-messagebus" -> "container-disc"
+  vespajlib -> "container-disc"
+  vespalog -> "container-disc"
+  "hosted-zone-api" -> "container-disc"
+  "config-bundle" -> "container-disc"
+  configdefinitions -> "container-disc"
+  jdisc_jetty -> "container-disc"
+  docproc [fontsize=28,label="docproc
+12s (180s)"]
+  parent -> docproc
+  component -> docproc
+  config -> docproc
+  "config-lib" -> docproc
+  "container-core" -> docproc [color=blue,weight=12,penwidth=4]
+  "container-messagebus" -> docproc
+  document -> docproc
+  documentapi -> docproc
+  jdisc_core -> docproc
+  messagebus -> docproc
+  statistics -> docproc
+  vespajlib -> docproc
+  yolean -> docproc
+  "metrics-proxy" [fontsize=25,label="metrics-proxy
+10s (178s)"]
+  parent -> "metrics-proxy"
+  component -> "metrics-proxy"
+  "config-lib" -> "metrics-proxy"
+  "container-apache-http-client-bundle" -> "metrics-proxy"
+  "container-core" -> "metrics-proxy" [color=blue,weight=12,penwidth=4]
+  jdisc_core -> "metrics-proxy"
+  jrt -> "metrics-proxy"
+  vespajlib -> "metrics-proxy"
+  yolean -> "metrics-proxy"
+  testutil -> "metrics-proxy"
+  "container-core" [fontsize=62,label="container-core
+31s (168s)"]
+  parent -> "container-core"
+  "container-documentapi" -> "container-core" [color=red,weight=12,penwidth=4]
+  document -> "container-core"
+  fileacquirer -> "container-core"
+  linguistics -> "container-core"
+  messagebus -> "container-core"
+  "security-utils" -> "container-core"
+  statistics -> "container-core"
+  vdslib -> "container-core"
+  vespajlib -> "container-core"
+  vespalog -> "container-core"
+  component -> "container-core"
+  config -> "container-core"
+  "config-bundle" -> "container-core"
+  "config-lib" -> "container-core"
+  "container-apache-http-client-bundle" -> "container-core"
+  defaults -> "container-core"
+  jdisc_core -> "container-core"
+  jdisc_jetty -> "container-core"
+  yolean -> "container-core"
+  testutil -> "container-core"
+  "container-messagebus" [fontsize=30,label="container-messagebus
+12s (147s)"]
+  parent -> "container-messagebus"
+  component -> "container-messagebus"
+  config -> "container-messagebus"
+  "config-lib" -> "container-messagebus"
+  document -> "container-messagebus"
+  documentapi -> "container-messagebus" [color=blue,weight=11,penwidth=4]
+  jdisc_core -> "container-messagebus"
+  messagebus -> "container-messagebus"
+  "container-documentapi" [fontsize=11,label="container-documentapi
+2s (137s)"]
+  parent -> "container-documentapi"
+  documentapi -> "container-documentapi" [color=red,weight=10,penwidth=4]
+  "documentapi-dependencies" -> "container-documentapi"
+  vespa_feed_perf [fontsize=27,label="vespa_feed_perf
+11s (146s)"]
+  parent -> vespa_feed_perf
+  component -> vespa_feed_perf
+  documentapi -> vespa_feed_perf [color=blue,weight=11,penwidth=4]
+  messagebus -> vespa_feed_perf
+  documentapi [fontsize=54,label="documentapi
+26s (134s)"]
+  parent -> documentapi
+  "documentapi-dependencies" -> documentapi [color=red,weight=10,penwidth=4]
+  "documentapi-dependencies" [fontsize=11,label="documentapi-dependencies
+1s (108s)"]
+  parent -> "documentapi-dependencies"
+  component -> "documentapi-dependencies"
+  config -> "documentapi-dependencies"
+  "config-lib" -> "documentapi-dependencies"
+  configdefinitions -> "documentapi-dependencies"
+  document -> "documentapi-dependencies"
+  jrt -> "documentapi-dependencies"
+  messagebus -> "documentapi-dependencies" [color=red,weight=11,penwidth=4]
+  vdslib -> "documentapi-dependencies"
+  vespajlib -> "documentapi-dependencies"
+  yolean -> "documentapi-dependencies"
+  messagebus [fontsize=57,label="messagebus
+28s (106s)"]
+  parent -> messagebus
+  vespajlib -> messagebus
+  component -> messagebus [color=red,weight=11,penwidth=4]
+  config -> messagebus
+  configdefinitions -> messagebus
+  jrt -> messagebus
+  indexinglanguage [fontsize=25,label="indexinglanguage
+10s (95s)"]
+  parent -> indexinglanguage
+  vespajlib -> indexinglanguage
+  document -> indexinglanguage
+  linguistics -> indexinglanguage [color=blue,weight=6,penwidth=2]
+  "predicate-search-core" -> indexinglanguage
+  "model-integration" [fontsize=34,label="model-integration
+15s (124s)"]
+  parent -> "model-integration"
+  "config-model-api" -> "model-integration"
+  searchlib -> "model-integration" [color=blue,weight=9,penwidth=3]
+  vespajlib -> "model-integration"
+  searchlib [fontsize=36,label="searchlib
+16s (108s)"]
+  parent -> searchlib
+  document -> searchlib
+  vespajlib -> searchlib
+  "config-model-api" -> searchlib [color=blue,weight=7,penwidth=3]
+  vdslib [fontsize=20,label="vdslib
+7s (90s)"]
+  parent -> vdslib
+  config -> vdslib
+  document -> vdslib [color=blue,weight=6,penwidth=2]
+  configdefinitions -> vdslib
+  document [fontsize=31,label="document
+13s (83s)"]
+  parent -> document
+  config -> document [color=blue,weight=8,penwidth=3]
+  "predicate-search-core" -> document
+  vespajlib -> document
+  testutil -> document
+  "vespa-hadoop" [fontsize=46,label="vespa-hadoop
+22s (72s)"]
+  parent -> "vespa-hadoop"
+  "vespa-http-client" -> "vespa-hadoop" [color=blue,weight=11,penwidth=4]
+  "vespa-feed-client" -> "vespa-hadoop"
+  "vespa-http-client" [fontsize=38,label="vespa-http-client
+17s (50s)"]
+  parent -> "vespa-http-client"
+  vespajlib -> "vespa-http-client" [color=blue,weight=9,penwidth=3]
+  "security-utils" -> "vespa-http-client"
+  flags [fontsize=20,label="flags
+7s (84s)"]
+  parent -> flags
+  component -> flags [color=blue,weight=4,penwidth=2]
+  defaults -> flags
+  yolean -> flags
+  vespajlib -> flags
+  testutil -> flags
+  "tenant-cd-commons" [fontsize=15,label="tenant-cd-commons
+4s (95s)"]
+  parent -> "tenant-cd-commons"
+  "tenant-cd-api" -> "tenant-cd-commons"
+  "security-utils" -> "tenant-cd-commons"
+  "hosted-api" -> "tenant-cd-commons" [color=blue,weight=4,penwidth=2]
+  "config-provisioning" -> "tenant-cd-commons"
+  statistics [fontsize=18,label="statistics
+6s (83s)"]
+  parent -> statistics
+  vespalog -> statistics
+  "config-bundle" -> statistics
+  config -> statistics
+  component -> statistics [color=blue,weight=4,penwidth=2]
+  "vespa-maven-plugin" [fontsize=19,label="vespa-maven-plugin
+6s (106s)"]
+  parent -> "vespa-maven-plugin"
+  "hosted-api" -> "vespa-maven-plugin"
+  "config-provisioning" -> "vespa-maven-plugin"
+  "security-utils" -> "vespa-maven-plugin"
+  vespajlib -> "vespa-maven-plugin"
+  "config-application-package" -> "vespa-maven-plugin" [color=blue,weight=5,penwidth=2]
+  "tenant-cd-api" -> "vespa-maven-plugin"
+  yolean -> "vespa-maven-plugin"
+  "hosted-api" [fontsize=18,label="hosted-api
+6s (90s)"]
+  parent -> "hosted-api"
+  "security-utils" -> "hosted-api"
+  "config-provisioning" -> "hosted-api" [color=blue,weight=4,penwidth=2]
+  vespajlib -> "hosted-api"
+  yolean -> "hosted-api"
+  testutil -> "hosted-api"
+  "linguistics-components" [fontsize=22,label="linguistics-components
+8s (93s)"]
+  parent -> "linguistics-components"
+  component -> "linguistics-components"
+  linguistics -> "linguistics-components" [color=blue,weight=5,penwidth=2]
+  "config-bundle" -> "linguistics-components"
+  linguistics [fontsize=22,label="linguistics
+8s (85s)"]
+  parent -> linguistics
+  component -> linguistics [color=blue,weight=5,penwidth=2]
+  "config-bundle" -> linguistics
+  configdefinitions -> linguistics
+  vespajlib -> linguistics
+  "config-application-package" [fontsize=21,label="config-application-package
+7s (99s)"]
+  parent -> "config-application-package"
+  "config-model-api" -> "config-application-package" [color=blue,weight=5,penwidth=2]
+  "config-model-api" -> "config-application-package"
+  component -> "config-application-package"
+  vespajlib -> "config-application-package"
+  defaults -> "config-application-package"
+  config -> "config-application-package"
+  "config-provisioning" -> "config-application-package"
+  configdefinitions -> "config-application-package"
+  "config-model-api" [fontsize=20,label="config-model-api
+7s (91s)"]
+  parent -> "config-model-api"
+  "config-bundle" -> "config-model-api"
+  vespajlib -> "config-model-api"
+  component -> "config-model-api"
+  defaults -> "config-model-api"
+  config -> "config-model-api"
+  "config-provisioning" -> "config-model-api" [color=blue,weight=5,penwidth=2]
+  jdisc_core -> "config-model-api"
+  testutil -> "config-model-api"
+  "config-provisioning" [fontsize=20,label="config-provisioning
+7s (84s)"]
+  parent -> "config-provisioning"
+  vespajlib -> "config-provisioning"
+  component -> "config-provisioning" [color=blue,weight=4,penwidth=2]
+  configdefinitions -> "config-provisioning"
+  "config-bundle" -> "config-provisioning"
+  testutil -> "config-provisioning"
+  component [fontsize=18,label="component
+6s (77s)"]
+  parent -> component
+  "config-bundle" -> component [color=red,weight=3,penwidth=1]
+  vespajlib -> component
+  "config-lib" -> component
+  config -> component
+  "config-bundle" [fontsize=11,label="config-bundle
+2s (71s)"]
+  parent -> "config-bundle"
+  config -> "config-bundle" [color=red,weight=6,penwidth=2]
+  "config-lib" -> "config-bundle"
+  jrt -> "config-bundle"
+  vespajlib -> "config-bundle"
+  yolean -> "config-bundle"
+  vespalog -> "config-bundle"
+  "config-proxy" [fontsize=21,label="config-proxy
+7s (91s)"]
+  parent -> "config-proxy"
+  yolean -> "config-proxy"
+  "config-lib" -> "config-proxy"
+  defaults -> "config-proxy"
+  config -> "config-proxy"
+  jrt -> "config-proxy"
+  vespajlib -> "config-proxy"
+  vespalog -> "config-proxy"
+  filedistribution -> "config-proxy" [color=blue,weight=7,penwidth=3]
+  "container-apache-http-client-bundle" -> "config-proxy"
+  filedistribution [fontsize=32,label="filedistribution
+14s (83s)"]
+  parent -> filedistribution
+  "container-apache-http-client-bundle" -> filedistribution
+  vespajlib -> filedistribution
+  jrt -> filedistribution
+  config -> filedistribution [color=blue,weight=8,penwidth=3]
+  "config-lib" -> filedistribution
+  fileacquirer [fontsize=17,label="fileacquirer
+5s (74s)"]
+  parent -> fileacquirer
+  config -> fileacquirer [color=blue,weight=6,penwidth=2]
+  config [fontsize=33,label="config
+15s (69s)"]
+  parent -> config
+  "container-apache-http-client-bundle" -> config [color=red,weight=6,penwidth=2]
+  "config-lib" -> config
+  jrt -> config
+  vespajlib -> config
+  yolean -> config
+  defaults -> config
+  testutil -> config
+  logserver [fontsize=25,label="logserver
+10s (56s)"]
+  parent -> logserver
+  vespajlib -> logserver
+  yolean -> logserver
+  vespalog -> logserver
+  jrt -> logserver [color=blue,weight=7,penwidth=3]
+  jrt [fontsize=31,label="jrt
+13s (45s)"]
+  parent -> jrt
+  vespajlib -> jrt [color=blue,weight=8,penwidth=3]
+  "security-utils" -> jrt
+  "security-tools" [fontsize=18,label="security-tools
+6s (23s)"]
+  parent -> "security-tools"
+  "security-utils" -> "security-tools" [color=blue,weight=5,penwidth=2]
+  "predicate-search" [fontsize=24,label="predicate-search
+9s (48s)"]
+  parent -> "predicate-search"
+  "predicate-search-core" -> "predicate-search" [color=blue,weight=5,penwidth=2]
+  vespalog [fontsize=20,label="vespalog
+7s (39s)"]
+  parent -> vespalog
+  vespajlib -> vespalog [color=blue,weight=6,penwidth=2]
+  defaults -> vespalog
+  jaxrs_client_utils [fontsize=19,label="jaxrs_client_utils
+6s (39s)"]
+  parent -> jaxrs_client_utils
+  vespajlib -> jaxrs_client_utils [color=blue,weight=6,penwidth=2]
+  "application-model" -> jaxrs_client_utils
+  "security-utils" -> jaxrs_client_utils
+  jaxrs_utils -> jaxrs_client_utils
+  defaults -> jaxrs_client_utils
+  "predicate-search-core" [fontsize=18,label="predicate-search-core
+6s (38s)"]
+  parent -> "predicate-search-core"
+  vespajlib -> "predicate-search-core" [color=blue,weight=6,penwidth=2]
+  "clustercontroller-utils" [fontsize=23,label="clustercontroller-utils
+9s (41s)"]
+  parent -> "clustercontroller-utils"
+  vespajlib -> "clustercontroller-utils" [color=blue,weight=7,penwidth=3]
+  yolean -> "clustercontroller-utils"
+  "zookeeper-command-line-client" [fontsize=18,label="zookeeper-command-line-client
+6s (29s)"]
+  parent -> "zookeeper-command-line-client"
+  "zookeeper-client-common" -> "zookeeper-command-line-client" [color=blue,weight=4,penwidth=2]
+  "security-utils" -> "zookeeper-command-line-client"
+  "zookeeper-client-common" [fontsize=16,label="zookeeper-client-common
+5s (23s)"]
+  parent -> "zookeeper-client-common"
+  "security-utils" -> "zookeeper-client-common" [color=blue,weight=5,penwidth=2]
+  "tenant-cd-api" [fontsize=15,label="tenant-cd-api
+4s (61s)"]
+  parent -> "tenant-cd-api"
+  "hosted-zone-api" -> "tenant-cd-api" [color=blue,weight=3,penwidth=1]
+  jdisc_core -> "tenant-cd-api"
+  "container-apache-http-client-bundle" [fontsize=12,label="container-apache-http-client-bundle
+2s (54s)"]
+  parent -> "container-apache-http-client-bundle"
+  jdisc_core -> "container-apache-http-client-bundle" [color=red,weight=8,penwidth=3]
+  fsa [fontsize=17,label="fsa
+5s (37s)"]
+  parent -> fsa
+  vespajlib -> fsa [color=blue,weight=6,penwidth=2]
+  "hosted-zone-api" [fontsize=16,label="hosted-zone-api
+5s (56s)"]
+  parent -> "hosted-zone-api"
+  jdisc_core -> "hosted-zone-api" [color=blue,weight=8,penwidth=3]
+  "provided-dependencies" [fontsize=11,label="provided-dependencies
+1s (53s)"]
+  parent -> "provided-dependencies"
+  jdisc_core -> "provided-dependencies" [color=blue,weight=8,penwidth=3]
+  "config-lib" -> "provided-dependencies"
+  defaults -> "provided-dependencies"
+  jdisc_core [fontsize=41,label="jdisc_core
+19s (51s)"]
+  parent -> jdisc_core
+  testutil -> jdisc_core
+  defaults -> jdisc_core
+  "config-lib" -> jdisc_core
+  yolean -> jdisc_core
+  vespajlib -> jdisc_core [color=red,weight=9,penwidth=3]
+  integration_test [fontsize=17,label="integration_test
+5s (67s)"]
+  "integration-test-parent" -> integration_test
+  jdisc_core -> integration_test
+  "app-a" -> integration_test
+  "app-b-priv" -> integration_test
+  "app-ca" -> integration_test
+  "app-dj" -> integration_test
+  "app-ej-priv" -> integration_test
+  "app-f-more" -> integration_test
+  "app-g-act" -> integration_test
+  "app-h-log" -> integration_test
+  "cert-a" -> integration_test
+  "cert-b" -> integration_test
+  "cert-ca" -> integration_test
+  "cert-dc" -> integration_test
+  "cert-eab" -> integration_test
+  "cert-fac" -> integration_test [color=blue,weight=3,penwidth=1]
+  "cert-gg" -> integration_test
+  "cert-hi" -> integration_test
+  "cert-ih" -> integration_test
+  "cert-j-priv" -> integration_test
+  "cert-k-pkgs" -> integration_test
+  "cert-l1" -> integration_test
+  "cert-l1-dup" -> integration_test
+  "cert-l2" -> integration_test
+  "cert-ml" -> integration_test
+  "cert-ml-dup" -> integration_test
+  "cert-nac" -> integration_test
+  "cert-oa-path" -> integration_test
+  "cert-p-jar" -> integration_test
+  "cert-q-frag" -> integration_test
+  "cert-rq" -> integration_test
+  "cert-s-act" -> integration_test
+  "cert-tp" -> integration_test
+  "cert-us" -> integration_test
+  "my-bundle-activator" -> integration_test
+  "my-guice-module" -> integration_test
+  "my-server-provider" -> integration_test
+  test_bundles [fontsize=11,label="test_bundles
+1s (53s)"]
+  "integration-test-parent" -> test_bundles
+  jdisc_core -> test_bundles [color=blue,weight=8,penwidth=3]
+  "app-b-priv" [fontsize=13,label="app-b-priv
+2s (56s)"]
+  test_bundles -> "app-b-priv" [color=blue,weight=2,penwidth=1]
+  "my-server-provider" [fontsize=12,label="my-server-provider
+2s (56s)"]
+  test_bundles -> "my-server-provider" [color=blue,weight=2,penwidth=1]
+  "cert-tp" [fontsize=12,label="cert-tp
+2s (58s)"]
+  test_bundles -> "cert-tp"
+  "cert-p-jar" -> "cert-tp" [color=blue,weight=2,penwidth=1]
+  "cert-p-jar" [fontsize=12,label="cert-p-jar
+2s (55s)"]
+  test_bundles -> "cert-p-jar" [color=blue,weight=2,penwidth=1]
+  "cert-l2" [fontsize=12,label="cert-l2
+2s (56s)"]
+  test_bundles -> "cert-l2" [color=blue,weight=2,penwidth=1]
+  "cert-nac" [fontsize=12,label="cert-nac
+2s (61s)"]
+  test_bundles -> "cert-nac"
+  "cert-a" -> "cert-nac"
+  "cert-ca" -> "cert-nac" [color=blue,weight=3,penwidth=1]
+  "cert-oa-path" [fontsize=12,label="cert-oa-path
+2s (58s)"]
+  test_bundles -> "cert-oa-path"
+  "cert-a" -> "cert-oa-path" [color=blue,weight=3,penwidth=1]
+  "cert-us" [fontsize=12,label="cert-us
+2s (58s)"]
+  test_bundles -> "cert-us"
+  "cert-s-act" -> "cert-us" [color=blue,weight=3,penwidth=1]
+  "cert-dc" [fontsize=12,label="cert-dc
+2s (61s)"]
+  test_bundles -> "cert-dc"
+  "cert-ca" -> "cert-dc" [color=blue,weight=3,penwidth=1]
+  "cert-fac" [fontsize=12,label="cert-fac
+2s (61s)"]
+  test_bundles -> "cert-fac"
+  "cert-a" -> "cert-fac"
+  "cert-ca" -> "cert-fac" [color=blue,weight=3,penwidth=1]
+  "cert-ca" [fontsize=12,label="cert-ca
+2s (58s)"]
+  test_bundles -> "cert-ca"
+  "cert-a" -> "cert-ca" [color=blue,weight=3,penwidth=1]
+  "cert-k-pkgs" [fontsize=13,label="cert-k-pkgs
+3s (56s)"]
+  test_bundles -> "cert-k-pkgs" [color=blue,weight=2,penwidth=1]
+  "cert-rq" [fontsize=12,label="cert-rq
+2s (58s)"]
+  test_bundles -> "cert-rq"
+  "cert-q-frag" -> "cert-rq" [color=blue,weight=3,penwidth=1]
+  "my-guice-module" [fontsize=12,label="my-guice-module
+2s (56s)"]
+  test_bundles -> "my-guice-module" [color=blue,weight=2,penwidth=1]
+  "cert-gg" [fontsize=12,label="cert-gg
+2s (56s)"]
+  test_bundles -> "cert-gg" [color=blue,weight=2,penwidth=1]
+  "cert-hi" [fontsize=12,label="cert-hi
+2s (56s)"]
+  test_bundles -> "cert-hi" [color=blue,weight=2,penwidth=1]
+  "cert-eab" [fontsize=12,label="cert-eab
+2s (58s)"]
+  test_bundles -> "cert-eab"
+  "cert-a" -> "cert-eab" [color=blue,weight=3,penwidth=1]
+  "cert-b" -> "cert-eab"
+  "cert-b" [fontsize=12,label="cert-b
+2s (56s)"]
+  test_bundles -> "cert-b" [color=blue,weight=2,penwidth=1]
+  "cert-q-frag" [fontsize=12,label="cert-q-frag
+2s (56s)"]
+  test_bundles -> "cert-q-frag" [color=blue,weight=2,penwidth=1]
+  "app-g-act" [fontsize=12,label="app-g-act
+2s (56s)"]
+  test_bundles -> "app-g-act" [color=blue,weight=2,penwidth=1]
+  "app-h-log" [fontsize=12,label="app-h-log
+2s (56s)"]
+  test_bundles -> "app-h-log" [color=blue,weight=2,penwidth=1]
+  "app-ca" [fontsize=12,label="app-ca
+2s (58s)"]
+  test_bundles -> "app-ca"
+  "cert-a" -> "app-ca" [color=blue,weight=3,penwidth=1]
+  "cert-s-act" [fontsize=12,label="cert-s-act
+2s (56s)"]
+  test_bundles -> "cert-s-act" [color=blue,weight=2,penwidth=1]
+  "app-ej-priv" [fontsize=12,label="app-ej-priv
+2s (58s)"]
+  test_bundles -> "app-ej-priv"
+  "cert-j-priv" -> "app-ej-priv" [color=blue,weight=3,penwidth=1]
+  "app-a" [fontsize=12,label="app-a
+2s (56s)"]
+  test_bundles -> "app-a" [color=blue,weight=2,penwidth=1]
+  "cert-l1" [fontsize=12,label="cert-l1
+2s (56s)"]
+  test_bundles -> "cert-l1" [color=blue,weight=2,penwidth=1]
+  "cert-l1-dup" [fontsize=12,label="cert-l1-dup
+2s (56s)"]
+  test_bundles -> "cert-l1-dup" [color=blue,weight=2,penwidth=1]
+  "cert-a" [fontsize=12,label="cert-a
+2s (56s)"]
+  test_bundles -> "cert-a" [color=blue,weight=2,penwidth=1]
+  "cert-ih" [fontsize=12,label="cert-ih
+2s (56s)"]
+  test_bundles -> "cert-ih" [color=blue,weight=2,penwidth=1]
+  "cert-ml" [fontsize=12,label="cert-ml
+2s (56s)"]
+  test_bundles -> "cert-ml" [color=blue,weight=2,penwidth=1]
+  "my-bundle-activator" [fontsize=12,label="my-bundle-activator
+2s (56s)"]
+  test_bundles -> "my-bundle-activator" [color=blue,weight=2,penwidth=1]
+  "app-dj" [fontsize=12,label="app-dj
+2s (59s)"]
+  test_bundles -> "app-dj"
+  "cert-j-priv" -> "app-dj" [color=blue,weight=3,penwidth=1]
+  "cert-j-priv" [fontsize=12,label="cert-j-priv
+2s (56s)"]
+  test_bundles -> "cert-j-priv" [color=blue,weight=2,penwidth=1]
+  "app-f-more" [fontsize=12,label="app-f-more
+2s (56s)"]
+  test_bundles -> "app-f-more" [color=blue,weight=2,penwidth=1]
+  "cert-ml-dup" [fontsize=12,label="cert-ml-dup
+2s (56s)"]
+  test_bundles -> "cert-ml-dup" [color=blue,weight=2,penwidth=1]
+  vespajlib [fontsize=32,label="vespajlib
+14s (32s)"]
+  parent -> vespajlib
+  "security-utils" -> vespajlib [color=red,weight=7,penwidth=3]
+  yolean -> vespajlib
+  testutil -> vespajlib
+  "security-utils" [fontsize=24,label="security-utils
+9s (17s)"]
+  parent -> "security-utils"
+  testutil -> "security-utils" [color=red,weight=5,penwidth=2]
+  logd [fontsize=15,label="logd
+4s (14s)"]
+  parent -> logd
+  "config-lib" -> logd [color=blue,weight=4,penwidth=2]
+  client [fontsize=19,label="client
+6s (10s)"]
+  parent -> client [color=blue,weight=4,penwidth=2]
+  metrics [fontsize=15,label="metrics
+4s (14s)"]
+  parent -> metrics
+  "config-lib" -> metrics [color=blue,weight=4,penwidth=2]
+  storage [fontsize=17,label="storage
+5s (15s)"]
+  parent -> storage
+  "config-lib" -> storage [color=blue,weight=4,penwidth=2]
+  testutil [fontsize=16,label="testutil
+5s (8s)"]
+  parent -> testutil [color=red,weight=3,penwidth=1]
+  searchcore [fontsize=18,label="searchcore
+6s (15s)"]
+  parent -> searchcore
+  "config-lib" -> searchcore [color=blue,weight=4,penwidth=2]
+  searchsummary [fontsize=15,label="searchsummary
+4s (14s)"]
+  parent -> searchsummary
+  "config-lib" -> searchsummary [color=blue,weight=4,penwidth=2]
+  vsm [fontsize=16,label="vsm
+4s (14s)"]
+  parent -> vsm
+  "config-lib" -> vsm [color=blue,weight=4,penwidth=2]
+  configdefinitions [fontsize=20,label="configdefinitions
+7s (17s)"]
+  parent -> configdefinitions
+  "config-lib" -> configdefinitions [color=blue,weight=4,penwidth=2]
+  "config-lib" [fontsize=18,label="config-lib
+6s (9s)"]
+  parent -> "config-lib" [color=blue,weight=3,penwidth=1]
+  config_test [fontsize=11,label="config_test
+2s (12s)"]
+  "config-lib" -> config_test [color=blue,weight=3,penwidth=1]
+  vespa_jersey2 [fontsize=11,label="vespa_jersey2
+1s (5s)"]
+  parent -> vespa_jersey2 [color=blue,weight=2,penwidth=1]
+  "orchestrator-restapi" [fontsize=15,label="orchestrator-restapi
+4s (7s)"]
+  parent -> "orchestrator-restapi" [color=blue,weight=3,penwidth=1]
+  yolean [fontsize=18,label="yolean
+6s (9s)"]
+  parent -> yolean [color=blue,weight=3,penwidth=1]
+  "bundle-plugin-test" [fontsize=11,label="bundle-plugin-test
+1s (5s)"]
+  parent -> "bundle-plugin-test" [color=blue,weight=2,penwidth=1]
+  "integration-test-parent" [fontsize=11,label="integration-test-parent
+1s (5s)"]
+  parent -> "integration-test-parent" [color=blue,weight=2,penwidth=1]
+  socket_test [fontsize=12,label="socket_test
+2s (5s)"]
+  parent -> socket_test [color=blue,weight=2,penwidth=1]
+  "vespa-feed-client-cli" [fontsize=16,label="vespa-feed-client-cli
+4s (15s)"]
+  parent -> "vespa-feed-client-cli"
+  "vespa-feed-client" -> "vespa-feed-client-cli" [color=blue,weight=4,penwidth=2]
+  "vespa-feed-client" [fontsize=20,label="vespa-feed-client
+7s (10s)"]
+  parent -> "vespa-feed-client" [color=blue,weight=4,penwidth=2]
+  jaxrs_utils [fontsize=14,label="jaxrs_utils
+3s (7s)"]
+  parent -> jaxrs_utils [color=blue,weight=3,penwidth=1]
+  jdisc_jetty [fontsize=11,label="jdisc_jetty
+2s (5s)"]
+  parent -> jdisc_jetty [color=blue,weight=2,penwidth=1]
+  defaults [fontsize=15,label="defaults
+4s (8s)"]
+  parent -> defaults [color=blue,weight=3,penwidth=1]
+  "application-model" [fontsize=15,label="application-model
+4s (7s)"]
+  parent -> "application-model" [color=blue,weight=3,penwidth=1]
+}
