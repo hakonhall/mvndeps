@@ -79,45 +79,26 @@ public class Main {
     }
 
     private void dotCommand() {
-        Path inputPath = null;
-        Path outputPath = null;
-        Path projectDirectory = null;
+        var usage = new Usage();
+        Option<Path> inputPath = usage.addRequired("-i", Path::of);
+        Option<Path> outputPath = usage.addRequired("-o", Path::of);
+        Option<Path> projectDirectory = usage.addRequired("-p", Path::of);
 
-        for (; !args.atEnd(); args.next()) {
-            switch (args.getString()) {
-                case "-i":
-                    inputPath = Path.of(args.nextAsStringOptionValue());
-                    continue;
-                case "-o":
-                    outputPath = Path.of(args.nextAsStringOptionValue());
-                    continue;
-                case "-p":
-                    projectDirectory = Path.of(args.nextAsStringOptionValue());
-                    continue;
-                default:
-                    if (args.getString().startsWith("-"))
-                        throw new UsageError("Unknown option: " + args.getString());
-                    // fall through to break
-            }
-            break;
-        }
+        usage.readOptions(args);
 
-        failIf(inputPath == null, "-i is required");
-        Path finalInputPath = inputPath;
+        Path finalInputPath = inputPath.get();
         failIf(uncheckIO(() -> !Files.isRegularFile(finalInputPath)), "Input file does not exist: " + inputPath);
 
-        failIf(outputPath == null, "-o is required");
-        Path finalOutputPath = outputPath;
+        Path finalOutputPath = outputPath.get();
         failIf(uncheckIO(() -> !Files.isDirectory(finalOutputPath.getParent())), "Directory of output path does not exist: " +
-                outputPath.getParent());
+                finalOutputPath.getParent());
 
-        failIf(projectDirectory == null, "-p is required");
-        Path finalProjectDirectory = projectDirectory;
+        Path finalProjectDirectory = projectDirectory.get();
         failIf(uncheckIO(() -> !Files.isDirectory(finalProjectDirectory)), "Project does not exist: " + projectDirectory);
 
         failIf(!args.atEnd(), "Extraneous arguments");
 
-        new DotCommand(inputPath, outputPath, projectDirectory).go();
+        new DotCommand(inputPath.get(), outputPath.get(), projectDirectory.get()).go();
     }
 
     private void buildOrder() {
@@ -158,11 +139,12 @@ public class Main {
             }
 
         } else {
-            var buildInfos = new BuildInfos(new ArrayList<>());
+            ArrayList<BuildInfo> buildInfosList = new ArrayList<>();
             verticesInBuildOrder.forEach(vertex -> {
                 var buildInfo = new BuildInfo(vertex.id().getGroupArtifact(), vertex.get().module().modulePath(), null);
-                buildInfos.buildInfos().add(buildInfo);
+                buildInfosList.add(buildInfo);
             });
+            var buildInfos = new BuildInfos(buildInfosList);
 
             if (outputDirectory.get().isPresent()) {
                 createDirectoryUnlessItExists(outputDirectory.get().get());

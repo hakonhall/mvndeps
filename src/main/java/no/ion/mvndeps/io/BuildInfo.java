@@ -29,6 +29,8 @@ public record BuildInfo(ArtifactId artifactId, Path modulePath, Duration buildTi
         Objects.requireNonNull(modulePath);
     }
 
+    public Duration buildTime() { return Objects.requireNonNull(buildTimeOrNull); }
+
     public String serialize() {
         var stringBuilder = new StringBuilder();
 

@@ -1,5 +1,6 @@
 package no.ion.mvndeps.build;
 
+import no.ion.mvndeps.io.BuildInfos;
 import no.ion.mvndeps.maven.MavenCoordinate;
 import no.ion.mvndeps.misc.Mutable;
 import no.ion.mvndeps.dot.DotAttribute;
@@ -17,12 +18,12 @@ import java.util.Objects;
 
 public class BuildGraph {
     private final Path outputPath;
-    private final BuildResults buildResults;
+    private final BuildInfos buildInfos;
     private final Build build;
 
-    public BuildGraph(Path outputPath, BuildResults buildResults, Build build) {
+    public BuildGraph(Path outputPath, BuildInfos buildInfos, Build build) {
         this.outputPath = outputPath;
-        this.buildResults = buildResults;
+        this.buildInfos = buildInfos;
         this.build = build;
     }
 
@@ -47,7 +48,7 @@ public class BuildGraph {
                 criticalEdge.set(edge);
             }
 
-            Duration elapsedTime = buildResults.get(vertex.id().getGroupArtifact()).buildTime();
+            Duration elapsedTime = buildInfos.getByArtifactId(vertex.id().getGroupArtifact()).buildTime();
             if (totalElapsedTimeBase == null)
                 totalElapsedTimeBase = Duration.ZERO;
             Duration totalElapsedTime = totalElapsedTimeBase.plus(elapsedTime);
